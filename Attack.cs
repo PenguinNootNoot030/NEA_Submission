@@ -1,8 +1,6 @@
 ﻿using System;
 namespace Testing_WPF
 {
-
-	//program this as an interface for the 6 different attacks
 	//rotation
 	//cropping
 	//blurring

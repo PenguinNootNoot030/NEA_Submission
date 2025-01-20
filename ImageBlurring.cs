@@ -1,11 +1,9 @@
 ﻿using System;
 namespace Testing_WPF
 {
-	public class ImageBlurring
+	public class ImageBlurring //: Attack
 	{
-		public ImageBlurring()
-		{
-		}
-	}
+        
+    }
 }
 
