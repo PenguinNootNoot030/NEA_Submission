@@ -1,11 +1,13 @@
 ﻿using System;
 namespace Testing_WPF
 {
-	//rotation
-	//cropping
-	//blurring
-	//lossy compression
-	public abstract class Attack
+    //rotation
+    //cropping
+
+    //compression (technique)
+    //blurring (visual)
+
+    public abstract class Attack
 	{
         // Attributes
         protected Matrix RedChannel;

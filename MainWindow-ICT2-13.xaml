@@ -24,7 +24,7 @@
         
         <TextBlock HorizontalAlignment="Left" Margin="606,32,0,0" TextWrapping="Wrap" Text="Operation" VerticalAlignment="Top"/>
         
-        <StackPanel/>
+        <StackPanel x:Name="ParamArea"/>
 
 
 

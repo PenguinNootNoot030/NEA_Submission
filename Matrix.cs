@@ -5,6 +5,7 @@ using System.Text;
 namespace Testing_WPF
 {
 	//MAJOR FUNCTIONALITY COMPLETE AND TESTED
+	//Todo: fix the submatrix() function!!!
     //test : 3*3 (same dimension) matrix multiplication & addition & transposition tested + worked
     //test : 2*4 and 4*2 (diff.dimension matrix) multiplication & transposition tested + worked
 	

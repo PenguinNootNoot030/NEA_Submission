@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Drawing;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,6 +17,9 @@ namespace Testing_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        ImageHandling ImageHandler { get; set; }
+        string filePath { get; set; }
+        Bitmap bitmap { get; set; }
         public MainWindow()
         {
             string filePath = @"C:\Users\YANGAN\OneDrive - The Kings School Chester\unopics\B0.png";
@@ -37,9 +41,11 @@ namespace Testing_WPF
         }
 
         //connect to the funcion of saving the image to the provided filepath
+
+        //ToDo: fix the logic of save button when Ui is done.
         private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            ImageHandler.SaveImage(filePath,bitmap);
         }
 
         //clearing the content within the image box
@@ -54,6 +60,7 @@ namespace Testing_WPF
             // Clear the dependent ComboBox
             OptionSelect.Items.Clear();
             OptionSelect.Items.Add(new ComboBoxItem { Content = "*", IsEnabled = false });
+            ParamArea.Children.Clear();
 
             // Get the selected item from ModeSelect ComboBox
             string selectedOption = (ModeSelect.SelectedItem as ComboBoxItem)?.Content.ToString();
@@ -61,6 +68,14 @@ namespace Testing_WPF
             // Populate the OptionSelect ComboBox based on the ModeSelect choice
             if (selectedOption == "Embed")
             {
+                TextBox inputTextBox = new TextBox
+                {
+                    Width = 200,
+                    Height = 30,
+                    Margin = new Thickness(0, 10, 0, 0),
+                    Name = "UserInputTextBox",
+                    Text = "Enter text for embedding..."
+                };
                 OptionSelect.Items.Add(new ComboBoxItem { Content = "DCT" });
                 OptionSelect.Items.Add(new ComboBoxItem { Content = "LSBW" });
             }

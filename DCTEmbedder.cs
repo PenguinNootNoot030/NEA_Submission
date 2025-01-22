@@ -3,6 +3,12 @@ namespace Testing_WPF
 {
 	public class DCTEmbedder: Embedder
 	{
+
+        private Matrix RedChannel;
+        private Matrix GreenChannel;
+        private Matrix BlueChannel;
+        private string WatermarkMessage;
+        private int BitPlane;
         private int BlockSize;
         private double EmbeddingStrength;
 
@@ -36,7 +42,7 @@ namespace Testing_WPF
                 Matrix idctBlock = ApplyIDCT(dctBlock);
 
                 // Replace the block in the original matrix
-                ReplaceBlock(RedChannel, idctBlock, block.RowStart, block.ColumnStart);
+                ReplaceBlock(RedChannel, idctBlock, block.GetRow(), block.GetColumn());
 
                 bitIndex++;
             }
@@ -87,8 +93,8 @@ namespace Testing_WPF
         private List<Matrix> SplitIntoBlocks(Matrix matrix, int blockSize)
         {
             List<Matrix> blocks = new List<Matrix>();
-            int rows = matrix.Rows;
-            int cols = matrix.Columns;
+            int rows = matrix.GetRow();
+            int cols = matrix.GetRow();
 
             for (int i = 0; i < rows; i += blockSize)
             {

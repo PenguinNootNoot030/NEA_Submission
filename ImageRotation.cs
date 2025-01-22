@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Testing_WPF
 {
-	public class ImageRotation
+	public class ImageRotation // keep
 	{
 		public ImageRotation()
 		{
