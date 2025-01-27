@@ -60,6 +60,7 @@ namespace Testing_WPF
             return (A_scale, R_scale, G_scale, B_scale);
         }
 
+
         //debugging
         /*
         public void DisplayImage(Matrix source_Amat, Matrix source_Rmat, Matrix source_Gmat, Matrix source_Bmat)

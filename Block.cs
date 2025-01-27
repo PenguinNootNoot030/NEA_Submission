@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Testing_WPF
 {
@@ -12,7 +13,12 @@ namespace Testing_WPF
         Matrix R;
         Matrix G;
         Matrix B;
-        public Block()
-        { }
+        public Block(Matrix A, Matrix R, Matrix G, Matrix B)
+        { 
+            this.A = A;
+            this.G = G;
+            this.B = B; 
+            this.R = R;
+        }
     }
 }
