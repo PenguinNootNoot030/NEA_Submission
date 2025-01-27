@@ -38,6 +38,8 @@ namespace Testing_WPF
 		public int GetRow() => row;
 		public Matrix GetTMatrix() => new Matrix(t_matrix);
 
+		public Matrix GetSubMatrix(int i, int j, int blockSize) => new Matrix(t_matrix); // FIXXING REQUIRED
+
 		//return specific double element
 		//Todo: Validate the row/column index
 		public double GetElement(int rowIndex, int columnIndex)

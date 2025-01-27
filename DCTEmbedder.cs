@@ -100,7 +100,7 @@ namespace Testing_WPF
             {
                 for (int j = 0; j < cols; j += blockSize)
                 {
-                    Matrix block = matrix.GetSubMatrix(i, j, blockSize, blockSize);
+                    Matrix block = matrix.GetSubMatrix(i, j, blockSize);
                     blocks.Add(block);
                 }
             }
@@ -111,8 +111,8 @@ namespace Testing_WPF
         // Replace a block in the original matrix
         private void ReplaceBlock(Matrix matrix, Matrix block, int rowStart, int colStart)
         {
-            int blockRows = block.Rows;
-            int blockCols = block.Columns;
+            int blockRows = block.GetRow();
+            int blockCols = block.GetColumn();
 
             for (int i = 0; i < blockRows; i++)
             {

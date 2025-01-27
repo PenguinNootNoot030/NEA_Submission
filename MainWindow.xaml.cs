@@ -60,7 +60,7 @@ namespace Testing_WPF
             // Clear the dependent ComboBox
             OptionSelect.Items.Clear();
             OptionSelect.Items.Add(new ComboBoxItem { Content = "*", IsEnabled = false });
-            ParamArea.Children.Clear();
+            //ParamArea.Children.Clear();
 
             // Get the selected item from ModeSelect ComboBox
             string selectedOption = (ModeSelect.SelectedItem as ComboBoxItem)?.Content.ToString();
