@@ -13,8 +13,7 @@ namespace Testing_WPF
         private double EmbeddingStrength;
 
         // Constructor
-        public DCTEmbedder(Matrix red, Matrix green, Matrix blue, string message, int blockSize, double strength)
-            //: base(red, green, blue, message)
+        public DCTEmbedder(Block block, string message, int blockSize, double strength): base(red, green, blue, message)
         {
             BlockSize = blockSize;
             EmbeddingStrength = strength;

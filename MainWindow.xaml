@@ -5,15 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Testing_WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" Background="AliceBlue">
     <Grid>
 
-        <Image x:Name="MainPictureDisplay" HorizontalAlignment="Left" Height="218" Margin="38,25,0,0" VerticalAlignment="Top" Width="365" RenderTransformOrigin="-4.405,-0.395"/>
-        
+        <Image x:Name="MainPictureDisplay" HorizontalAlignment="Left" Height="260" Margin="38,18,0,0" VerticalAlignment="Top" Width="365" RenderTransformOrigin="-4.405,-0.395"/>
+
         <!--Buttons-->
         <Button x:Name="ClearButton" Content="Clear" HorizontalAlignment="Left" Margin="94,291,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.277,0.609" Height="34" Width="60" Click="Clear_Button_Click"/>
         <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Left" Margin="286,291,0,0" VerticalAlignment="Top" Height="34" Width="60" RenderTransformOrigin="0.517,1.089" Click="Save_Button_Click"/>
-        
+
         <!--Combo Boxes-->
         <ComboBox x:Name="ModeSelect" HorizontalAlignment="Left" Margin="525,29,0,0" VerticalAlignment="Top" Width="109" RenderTransformOrigin="-0.225,0.093" SelectionChanged="ModeSelect_SelectionChanged" >
             <ComboBoxItem Content="Embed"/>
@@ -21,12 +21,14 @@
             <ComboBoxItem Content="Evaluate"/>
         </ComboBox>
         <ComboBox x:Name="OptionSelect" HorizontalAlignment="Left" Margin="664,29,0,0" VerticalAlignment="Top" Width="109" RenderTransformOrigin="-0.225,0.093" SelectionChanged="OptionSelect_SelectionChanged" />
-        
+
         <!--Labels-->
         <Label Content="Mode" HorizontalAlignment="Left" Margin="438,25,0,0" VerticalAlignment="Top" Width="59" RenderTransformOrigin="0.61,0.618"/>
 
-        <!--Content Control-->
-        <ContentControl Content="ContentControl" HorizontalAlignment="Left" Margin="468,0,0,0" VerticalAlignment="Center" Height="282" Width="286"/>
+        <StackPanel x:Name="ParamArea" Orientation= "Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Height="350" Width="330" Margin="446,65,0,0" Background="Lavender">
+
+        </StackPanel>
+
 
     </Grid>
 </Window>

@@ -12,6 +12,8 @@ using System.Windows.Shapes;
 
 namespace Testing_WPF
 {
+
+    //ToDo: add more guidance
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -60,7 +62,7 @@ namespace Testing_WPF
             // Clear the dependent ComboBox
             OptionSelect.Items.Clear();
             OptionSelect.Items.Add(new ComboBoxItem { Content = "*", IsEnabled = false });
-            //ParamArea.Children.Clear();
+            ParamArea.Children.Clear();
 
             // Get the selected item from ModeSelect ComboBox
             string selectedOption = (ModeSelect.SelectedItem as ComboBoxItem)?.Content.ToString();
@@ -102,11 +104,25 @@ namespace Testing_WPF
         private void OptionSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string OperationSelected = (OptionSelect.SelectedItem as ComboBoxItem)?.Content.ToString();
+            ParamArea.Children.Clear();
             switch (OperationSelected)
             {
                 case "DCT":
+                    for (int i = 1; i <= 3; i++)
+                    {
+                        TextBox paramTextBox = new TextBox
+                        {
+                            Width = 200,
+                            Height = 30,
+                            Margin = new Thickness(0, 5, 0, 0),
+                            Name = $"ParamTextBox{i}",
+                            Text = $"Enter value {i}..."
+                        };
 
-                    return;
+                        // Add the TextBox to the ParamArea StackPanel
+                        ParamArea.Children.Add(paramTextBox);
+                    }
+                        return;
                 case "LSBW":
                     return;
                 case "Rotation":
