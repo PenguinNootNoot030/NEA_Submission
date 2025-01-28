@@ -26,6 +26,7 @@ namespace Testing_WPF
         {
             string filePath = @"C:\Users\YANGAN\OneDrive - The Kings School Chester\unopics\B0.png";
             DisplayImage(filePath);
+           // ModeSelect.SelectedIndex = 0;
         }
 
         private void DisplayImage(string filePath)

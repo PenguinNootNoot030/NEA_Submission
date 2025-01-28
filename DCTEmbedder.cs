@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Testing_WPF
 {
-	public class DCTEmbedder: Embedder
+	public class DCTEmbedder//: Embedder
 	{
 
         private Matrix RedChannel;
@@ -13,12 +13,13 @@ namespace Testing_WPF
         private double EmbeddingStrength;
 
         // Constructor
-        public DCTEmbedder(Block block, string message, int blockSize, double strength): base(red, green, blue, message)
+        public DCTEmbedder(Matrix red, Matrix green, Matrix blue, string message, int blockSize, double strength)
+            //: base(red, green, blue, message)
         {
             BlockSize = blockSize;
             EmbeddingStrength = strength;
         }
-
+        /*
         public override void EmbedWatermark()
         {
             byte[] watermarkBits = ConvertMessageToBits(WatermarkMessage);
@@ -51,6 +52,7 @@ namespace Testing_WPF
                 throw new InvalidOperationException("The image is too small to hold the entire watermark.");
             }
         }
+        */
 
         // Embed a single bit into the DCT coefficients
         private void EmbedBitInDCT(Matrix dctBlock, byte bit)

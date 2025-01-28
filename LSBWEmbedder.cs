@@ -1,14 +1,14 @@
 ﻿using System;
 namespace Testing_WPF
 {
-	public class LSBWEmbedder: Embedder
+	public class LSBWEmbedder//: Embedder
 	{
         private Matrix RedChannel;
         private Matrix GreenChannel;
         private Matrix BlueChannel;
         private string WatermarkMessage;
         private int BitPlane;
-        
+        /*
         public LSBWEmbedder(Matrix red, Matrix green, Matrix blue, string message, int bitPlane)
         {
             RedChannel = red;
@@ -83,6 +83,8 @@ namespace Testing_WPF
         {
             return RedChannel;
         }
+         */
     }
+
 }
 

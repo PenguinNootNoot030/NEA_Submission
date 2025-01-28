@@ -15,11 +15,14 @@
         <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Left" Margin="286,291,0,0" VerticalAlignment="Top" Height="34" Width="60" RenderTransformOrigin="0.517,1.089" Click="Save_Button_Click"/>
 
         <!--Combo Boxes-->
-        <ComboBox x:Name="ModeSelect" HorizontalAlignment="Left" Margin="525,29,0,0" VerticalAlignment="Top" Width="109" RenderTransformOrigin="-0.225,0.093" SelectionChanged="ModeSelect_SelectionChanged" >
+        <ComboBox x:Name="ModeSelect" HorizontalAlignment="Left" Margin="525,29,0,0" VerticalAlignment="Top" Width="109" RenderTransformOrigin="-0.225,0.093" SelectionChanged="ModeSelect_SelectionChanged">
+
+            <ComboBoxItem Content="*" IsEnabled="False"/>
             <ComboBoxItem Content="Embed"/>
             <ComboBoxItem Content="Attack"/>
             <ComboBoxItem Content="Evaluate"/>
         </ComboBox>
+        
         <ComboBox x:Name="OptionSelect" HorizontalAlignment="Left" Margin="664,29,0,0" VerticalAlignment="Top" Width="109" RenderTransformOrigin="-0.225,0.093" SelectionChanged="OptionSelect_SelectionChanged" />
 
         <!--Labels-->
