@@ -102,15 +102,36 @@ namespace Testing_WPF
             }
         }
 
+        List<string> labels_ParamArea;
         private void OptionSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string OperationSelected = (OptionSelect.SelectedItem as ComboBoxItem)?.Content.ToString();
             ParamArea.Children.Clear();
+
+            Grid ParamGrid = new Grid { Margin = new Thickness(0, 5, 0, 0) };
+            ParamGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
+            ParamGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) });
+
             switch (OperationSelected)
             {
                 case "DCT":
-                    for (int i = 1; i <= 3; i++)
+                    labels_ParamArea = ["This is the first","P2","HELLOOOOO"];
+
+                    for (int i = 0; i < labels_ParamArea.Count(); i++)
+                    { ParamGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); }
+
+                    for (int i = 0; i < labels_ParamArea.Count(); i++)
                     {
+                        TextBlock label = new TextBlock
+                        {
+                            Text = labels_ParamArea[i],
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(5)
+                        };
+                        Grid.SetColumn(label, 0);
+                        Grid.SetRow(label, i);
+                        ParamGrid.Children.Add(label);
+
                         TextBox paramTextBox = new TextBox
                         {
                             Width = 200,
@@ -119,11 +140,13 @@ namespace Testing_WPF
                             Name = $"ParamTextBox{i}",
                             Text = $"Enter value {i}..."
                         };
-
+                        Grid.SetColumn(paramTextBox, 1);
+                        Grid.SetRow(paramTextBox, i);
                         // Add the TextBox to the ParamArea StackPanel
-                        ParamArea.Children.Add(paramTextBox);
+                        ParamGrid.Children.Add(paramTextBox);
                     }
-                        return;
+                    ParamArea.Children.Add(ParamGrid);
+                    return;
                 case "LSBW":
                     return;
                 case "Rotation":
