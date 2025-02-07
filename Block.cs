@@ -13,6 +13,7 @@ namespace Testing_WPF
         Matrix R;
         Matrix G;
         Matrix B;
+        int BlockSize;
         public Block(Matrix A, Matrix R, Matrix G, Matrix B)
         { 
             this.A = A;

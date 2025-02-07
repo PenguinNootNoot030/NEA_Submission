@@ -24,9 +24,8 @@ namespace Testing_WPF
         Bitmap bitmap { get; set; }
         public MainWindow()
         {
-            string filePath = @"C:\Users\YANGAN\OneDrive - The Kings School Chester\unopics\B0.png";
-            DisplayImage(filePath);
-           // ModeSelect.SelectedIndex = 0;
+            InitializeComponent();
+            ModeSelect.SelectedIndex = 0;
         }
 
         private void DisplayImage(string filePath)
@@ -103,6 +102,41 @@ namespace Testing_WPF
         }
 
         List<string> labels_ParamArea;
+
+        private void AppendTextblockToParamArea(Grid ParamGrid)
+        {
+            for (int i = 0; i < labels_ParamArea.Count(); i++)
+            { ParamGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); }
+
+            for (int i = 0; i < labels_ParamArea.Count(); i++)
+            {
+                TextBlock label = new TextBlock
+                {
+                    Text = labels_ParamArea[i],
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(5)
+                };
+                Grid.SetColumn(label, 0);
+                Grid.SetRow(label, i);
+                ParamGrid.Children.Add(label);
+
+                TextBox paramTextBox = new TextBox
+                {
+                    Width = 200,
+                    Height = 30,
+                    Margin = new Thickness(0, 5, 0, 0),
+                    Name = $"ParamTextBox{i}",
+                    Text = $"Enter value {i}..."
+                };
+                Grid.SetColumn(paramTextBox, 1);
+                Grid.SetRow(paramTextBox, i);
+                // Add the TextBox to the ParamArea StackPanel
+                ParamGrid.Children.Add(paramTextBox);
+            }
+            ParamArea.Children.Add(ParamGrid);
+        }
+
+        //Todo: Extrac out the append into a method.
         private void OptionSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string OperationSelected = (OptionSelect.SelectedItem as ComboBoxItem)?.Content.ToString();
@@ -112,11 +146,13 @@ namespace Testing_WPF
             ParamGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
             ParamGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) });
 
+            
             switch (OperationSelected)
             {
                 case "DCT":
-                    labels_ParamArea = ["This is the first","P2","HELLOOOOO"];
-
+                    labels_ParamArea = ["Block Size","Embedding Strength","Quantization Factor","DCT Coeffient"];
+                    AppendTextblockToParamArea(ParamGrid);
+                    /*
                     for (int i = 0; i < labels_ParamArea.Count(); i++)
                     { ParamGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); }
 
@@ -146,24 +182,49 @@ namespace Testing_WPF
                         ParamGrid.Children.Add(paramTextBox);
                     }
                     ParamArea.Children.Add(ParamGrid);
+                    */
                     return;
                 case "LSBW":
+                    labels_ParamArea = ["BitPlane Depth", "Channel selection", "Pixel Selection Method"];
+                    AppendTextblockToParamArea(ParamGrid);
                     return;
                 case "Rotation":
+                    labels_ParamArea = ["Rotation Angle", "Rotation Direction", "Interpoloation method"];
+                    AppendTextblockToParamArea(ParamGrid);
                     return;
                 case "Blurring":
+                    labels_ParamArea = ["Blur Type", "Kernel Size", "Blur Intensity"];
+                    AppendTextblockToParamArea(ParamGrid);
                     return;
                 case "Cropping":
+                    labels_ParamArea = ["X Start Pos", "Y start Pos", "Width", "Height"];
+                    AppendTextblockToParamArea(ParamGrid);
                     return;
                 case "Compression":
+                    labels_ParamArea = ["Compression Type", "Compression Format", "Compression Quality"];
+                    AppendTextblockToParamArea(ParamGrid);
                     return;
                 case "Check":
+                    labels_ParamArea = ["Scanned Block", "Original Message"];
+                    AppendTextblockToParamArea(ParamGrid);
                     return;
                 case "Identify":
+                    labels_ParamArea = ["Scanned Block", "Original Message", "If Corrupted"];
+                    AppendTextblockToParamArea(ParamGrid);
                     return;
             }
 
             
+        }
+
+        private void ApplyButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void UploadButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
