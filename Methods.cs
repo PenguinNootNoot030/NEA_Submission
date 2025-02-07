@@ -10,6 +10,8 @@ namespace Testing_WPF
     {
         public static void DCT()
         { }
+        public static void IDCT()
+        { }
         public static void LSBW()
         { }
     }

@@ -21,40 +21,47 @@ namespace Testing_WPF
     {
         ImageHandling ImageHandler { get; set; }
         string filePath { get; set; }
-        Bitmap bitmap { get; set; }
+        Bitmap bitmap;
+
+        List<string> labels_ParamArea;
+
         public MainWindow()
         {
             InitializeComponent();
             ModeSelect.SelectedIndex = 0;
+            filePath = @"C:\Users\YANGAN\OneDrive - The Kings School Chester\unopics\B0.png";
         }
 
         private void DisplayImage(string filePath)
         {
             try
             {
+                /*
                 BitmapImage bitmap = new BitmapImage();
                 bitmap.BeginInit();
                 bitmap.UriSource = new Uri(filePath, UriKind.Absolute);
                 bitmap.EndInit();
+                */
+                bitmap = new Bitmap(filePath);
+                MainPictureDisplay.Source = new BitmapImage(new Uri(filePath));
             }
             catch (Exception e)
             { MessageBox.Show($"Failed"); }
         
         }
 
-        //connect to the funcion of saving the image to the provided filepath
+
 
         //ToDo: fix the logic of save button when Ui is done.
+        //connect to the funcion of saving the image to the provided filepath
         private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
-            ImageHandler.SaveImage(filePath,bitmap);
+            ImageHandler.SaveImage(filePath,bitmap); // This has issue
         }
 
         //clearing the content within the image box
         private void Clear_Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
+        { MainPictureDisplay.Source = null; }
 
         
         private void ModeSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -101,7 +108,7 @@ namespace Testing_WPF
             }
         }
 
-        List<string> labels_ParamArea;
+       
 
         private void AppendTextblockToParamArea(Grid ParamGrid)
         {
@@ -223,6 +230,11 @@ namespace Testing_WPF
         }
 
         private void UploadButton_Click(object sender, RoutedEventArgs e)
+        {
+            DisplayImage(filePath);
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
         }
