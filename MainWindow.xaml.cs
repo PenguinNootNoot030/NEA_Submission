@@ -29,7 +29,7 @@ namespace Testing_WPF
         {
             InitializeComponent();
             ModeSelect.SelectedIndex = 0;
-            filePath = @"C:\Users\YANGAN\OneDrive - The Kings School Chester\unopics\B0.png";
+            filePath = @"C:\Users\YANGAN\OneDrive - The Kings School Chester\Documents\My Pictures\20211101_094712956_iOS.jpg";
         }
 
         private void DisplayImage(string filePath)
@@ -231,12 +231,11 @@ namespace Testing_WPF
 
         private void UploadButton_Click(object sender, RoutedEventArgs e)
         {
+            filePath = FilePath_TextBox.Text;
             DisplayImage(filePath);
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
+        
+        
     }
 }
