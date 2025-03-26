@@ -8,11 +8,11 @@ namespace Testing_WPF
 {
     internal static class Methods
     {
-        public static void DCT()
+        public static void DCT(Block block)
         { }
-        public static void IDCT()
+        public static void IDCT(Block block)
         { }
-        public static void LSBW()
+        public static void LSBW(Block block)
         { }
     }
 }

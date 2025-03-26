@@ -29,19 +29,12 @@ namespace Testing_WPF
         {
             InitializeComponent();
             ModeSelect.SelectedIndex = 0;
-            filePath = @"C:\Users\YANGAN\OneDrive - The Kings School Chester\Documents\My Pictures\20211101_094712956_iOS.jpg";
         }
 
         private void DisplayImage(string filePath)
         {
             try
             {
-                /*
-                BitmapImage bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                bitmap.UriSource = new Uri(filePath, UriKind.Absolute);
-                bitmap.EndInit();
-                */
                 bitmap = new Bitmap(filePath);
                 MainPictureDisplay.Source = new BitmapImage(new Uri(filePath));
             }
@@ -51,13 +44,6 @@ namespace Testing_WPF
         }
 
 
-
-        //ToDo: fix the logic of save button when Ui is done.
-        //connect to the funcion of saving the image to the provided filepath
-        private void Save_Button_Click(object sender, RoutedEventArgs e)
-        {
-            ImageHandler.SaveImage(filePath,bitmap); // This has issue
-        }
 
         //clearing the content within the image box
         private void Clear_Button_Click(object sender, RoutedEventArgs e)
@@ -143,56 +129,24 @@ namespace Testing_WPF
             ParamArea.Children.Add(ParamGrid);
         }
 
-        //Todo: Extrac out the append into a method.
+        string OperationSelected = "";
         private void OptionSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string OperationSelected = (OptionSelect.SelectedItem as ComboBoxItem)?.Content.ToString();
+            OperationSelected = (OptionSelect.SelectedItem as ComboBoxItem)?.Content.ToString();
             ParamArea.Children.Clear();
 
             Grid ParamGrid = new Grid { Margin = new Thickness(0, 5, 0, 0) };
             ParamGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
             ParamGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) });
-
             
             switch (OperationSelected)
             {
                 case "DCT":
-                    labels_ParamArea = ["Block Size","Embedding Strength","Quantization Factor","DCT Coeffient"];
+                    labels_ParamArea = ["Message","Block Size","Embedding Strength","Quantization Factor","DCT Coeffient"];
                     AppendTextblockToParamArea(ParamGrid);
-                    /*
-                    for (int i = 0; i < labels_ParamArea.Count(); i++)
-                    { ParamGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); }
-
-                    for (int i = 0; i < labels_ParamArea.Count(); i++)
-                    {
-                        TextBlock label = new TextBlock
-                        {
-                            Text = labels_ParamArea[i],
-                            VerticalAlignment = VerticalAlignment.Center,
-                            Margin = new Thickness(5)
-                        };
-                        Grid.SetColumn(label, 0);
-                        Grid.SetRow(label, i);
-                        ParamGrid.Children.Add(label);
-
-                        TextBox paramTextBox = new TextBox
-                        {
-                            Width = 200,
-                            Height = 30,
-                            Margin = new Thickness(0, 5, 0, 0),
-                            Name = $"ParamTextBox{i}",
-                            Text = $"Enter value {i}..."
-                        };
-                        Grid.SetColumn(paramTextBox, 1);
-                        Grid.SetRow(paramTextBox, i);
-                        // Add the TextBox to the ParamArea StackPanel
-                        ParamGrid.Children.Add(paramTextBox);
-                    }
-                    ParamArea.Children.Add(ParamGrid);
-                    */
                     return;
                 case "LSBW":
-                    labels_ParamArea = ["BitPlane Depth", "Channel selection", "Pixel Selection Method"];
+                    labels_ParamArea = ["Message", "BitPlane Depth", "Channel selection", "Pixel Selection Method"];
                     AppendTextblockToParamArea(ParamGrid);
                     return;
                 case "Rotation":
@@ -220,12 +174,48 @@ namespace Testing_WPF
                     AppendTextblockToParamArea(ParamGrid);
                     return;
             }
-
             
         }
 
         private void ApplyButton_Click(object sender, RoutedEventArgs e)
         {
+            //Read all inputted values in ParamArea
+            List<string> paramValues = new List<string>();
+            foreach (var child in ParamArea.Children)
+            { 
+                if (child is TextBox tb)
+                { 
+                    string value = tb.Text;
+                    paramValues.Add(value);
+                } 
+            }
+            switch (OperationSelected)
+            {
+                case "DCT":
+                    
+                    return;
+                case "LSBW":
+                    
+                    return;
+                case "Rotation":
+                    
+                    return;
+                case "Blurring":
+                    
+                    return;
+                case "Cropping":
+                    
+                    return;
+                case "Compression":
+                    
+                    return;
+                case "Check":
+                    
+                    return;
+                case "Identify":
+                    
+                    return;
+            }
 
         }
 

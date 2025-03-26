@@ -21,5 +21,6 @@ namespace Testing_WPF
             this.B = B; 
             this.R = R;
         }
+
     }
 }

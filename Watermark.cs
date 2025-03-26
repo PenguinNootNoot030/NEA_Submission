@@ -3,38 +3,36 @@ namespace Testing_WPF
 {
     public class Watermark
     {
-        string wateramrk_message;
+        string watermark_message;
         const int max_length = 50;
         byte[] binary_rep;
-        public Watermark(string message)
-        {
-            //set up the message to embed
-            wateramrk_message = message;
-        }
-
         int length;
-        public int GetMessgeLength()
-        { return length; }
-
-        /// <summary>
-        /// Ensure the format of the message is given correctly.
-        /// </summary>
-        /// <returns></returns>
-        private bool ValidateMessage() => wateramrk_message != null && wateramrk_message.Length <= max_length;
-
-        /// <summary>
-        /// Converting the given message into a byte array
-        /// </summary>
-        private void ConvertMessageToBinary()
+        public Watermark(string message)
         { 
-            binary_rep = new byte[wateramrk_message.Length];
-            for (int i = 0; i < binary_rep.Length; i++)
-            { binary_rep[i] = Convert.ToByte(wateramrk_message[i]); }
+            watermark_message = message;
+            length = watermark_message.Length;
+        } 
+        
+        private bool IfValidMessage() => watermark_message != null && watermark_message.Length <= max_length;
+
+        private void ConvertMessageToBinary()
+        {
+            if (IfValidMessage())
+            {
+                binary_rep = new byte[watermark_message.Length];
+                for (int i = 0; i < binary_rep.Length; i++)
+                { binary_rep[i] = Convert.ToByte(watermark_message[i]); }
+            }
+            else { throw new Exception("Messgae not in correct format."); }
         }
 
-        public byte[] GetBinaryRepresentation() => binary_rep;
+        public byte[] GetBinaryRepresentation()
+        {
+            ConvertMessageToBinary();
+            return binary_rep;
+        } 
 
-        private string ConvertBinaryToString(byte[] byteArr)
+        public string ConvertBinaryToString(byte[] byteArr)
         {
             string obj = "";
             foreach (byte b in byteArr)
