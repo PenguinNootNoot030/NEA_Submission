@@ -9,18 +9,23 @@ namespace Testing_WPF
 {
     internal class Block
     {
-        Matrix A;
-        Matrix R;
-        Matrix G;
-        Matrix B;
+        Matrix A_Matrix;
+        Matrix R_Matrix;
+        Matrix G_Matrix;
+        Matrix B_Matrix;
+        Matrix Y_Matrix;
+        Matrix Cr_Matrix;
+        Matrix Cb_Matrix;
         int BlockSize;
-        public Block(Matrix A, Matrix R, Matrix G, Matrix B)
-        { 
-            this.A = A;
-            this.G = G;
-            this.B = B; 
-            this.R = R;
+        public Block()
+        {  
         }
+        private void ARGB_YCbCr_Converter()
+        { }
+        private void YCbCr_ARGB_Converter() 
+        { }
+        public void UpdateARBG() { }
+        public void UpdateYCbCr() { }
 
     }
 }

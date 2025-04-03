@@ -40,17 +40,17 @@ namespace Testing_WPF
         }
 
         // Apply the Discrete Cosine Transform to a block
-        public Block ApplyDCT()
+        public void ApplyDCT()
         {
             Methods.DCT(block);
-            return block; // Placeholder
+            
         }
 
         // Apply the Inverse Discrete Cosine Transform to a block
-        public Block ApplyIDCT()
+        public void ApplyIDCT()
         {
             Methods.IDCT(block);
-            return block; // Placeholder
+            
         }
 
         
