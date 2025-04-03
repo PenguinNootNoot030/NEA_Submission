@@ -1,6 +1,7 @@
 ﻿using System;
 namespace Testing_WPF
 {
+    //boxed off
     public class Watermark
     {
         string watermark_message;

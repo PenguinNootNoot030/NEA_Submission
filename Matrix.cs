@@ -72,6 +72,7 @@ namespace Testing_WPF
 				}
 			}
 		}
+		public Matrix Inverse() { return new(t_matrix); } //FIXING REQUIED
 		
 		//Add matrix and return sum matrix
 		public static Matrix operator + (Matrix a, Matrix b)
@@ -114,20 +115,6 @@ namespace Testing_WPF
                         Console.WriteLine(res_element);
                         res_element = 0;
                     }
-                    /*
-					for (int i = 0; i < a.GetRow(); i++) //i indicates the current element within the given row of a 
-					{
-						for (int j = 0; j < a.GetColumn(); j++) // j indicates the current element within the given row b
-						{
-							res_element += a.GetElement(i, j) * b.GetElement(j, i);
-                            Console.WriteLine($"{i},{j},{z}::{a.GetElement(i, j)},{b.GetElement(j, i)},{a.GetElement(i, j) * b.GetElement(j, i)}");
-                        }
-                        result.SetElement(i, z, res_element);
-                        Console.WriteLine(res_element);
-                        res_element = 0;
-						//counter++;
-					}
-					*/
                 }
                 return result;
             }

@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace Testing_WPF
 {
-    internal class Block
+    public class Block
     {
         Matrix A_Matrix;
         Matrix R_Matrix;
