@@ -10,17 +10,26 @@ namespace Testing_WPF
 
     public abstract class Attack
 	{
-        // Attributes
-        //public Block b;
+        // Stores the result after attack is applied
+        protected Bitmap attackedImage;
 
-        // Constructor
-        protected Attack()
+        /// <summary>
+        /// Returns a human-readable name of the attack
+        /// </summary>
+        public abstract string GetAttackName();
+
+        /// <summary>
+        /// Applies the attack to the input image and returns the result
+        /// </summary>
+        public abstract Bitmap ApplyAttack(Bitmap image);
+
+        /// <summary>
+        /// Returns the attacked image (optional use, e.g., in GUI)
+        /// </summary>
+        public virtual Bitmap GetAttackedImage()
         {
-            
+            return attackedImage;
         }
-
-        // Abstract method to apply the attack
-        public abstract Bitmap Apply(Bitmap bmp);
     }
 }
 

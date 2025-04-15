@@ -1,44 +1,97 @@
 ﻿using System;
+using System.Text;
 namespace Testing_WPF
 {
     //boxed off
     public class Watermark
     {
-        string watermark_message;
-        const int max_length = 50;
-        byte[] binary_rep;
-        int length;
-        public Watermark(string message)
-        { 
-            watermark_message = message;
-            length = watermark_message.Length;
-        } 
-        
-        private bool IfValidMessage() => watermark_message != null && watermark_message.Length <= max_length;
+        private const int MaxLength = 50;
 
-        private void ConvertMessageToBinary()
+        private string Message;
+        private List<bool> BitStream;
+        private int BitPointer;
+
+        public Watermark(string message)
         {
-            if (IfValidMessage())
-            {
-                binary_rep = new byte[watermark_message.Length];
-                for (int i = 0; i < binary_rep.Length; i++)
-                { binary_rep[i] = Convert.ToByte(watermark_message[i]); }
-            }
-            else { throw new Exception("Messgae not in correct format."); }
+            Message = message;
+            if (!IsValid())
+                throw new ArgumentException("Invalid watermark message");
+
+            GenerateBitStream();
         }
 
-        public byte[] GetBinaryRepresentation()
+        private bool IsValid()
         {
-            ConvertMessageToBinary();
-            return binary_rep;
-        } 
+            return !string.IsNullOrEmpty(Message) && Message.Length <= MaxLength;
+        }
 
-        public string ConvertBinaryToString(byte[] byteArr)
+        private void GenerateBitStream()
         {
-            string obj = "";
-            foreach (byte b in byteArr)
-            { obj += b.ToString(); }
-            return obj;
+            BitStream = new List<bool>();
+
+            // Optionally prefix length (e.g. 8 bits)
+            byte lengthByte = (byte)Message.Length;
+            for (int i = 7; i >= 0; i--)
+                BitStream.Add((lengthByte & (1 << i)) != 0);
+
+            // Message → bits (ASCII encoding)
+            foreach (char c in Message)
+            {
+                byte chByte = (byte)c;
+                for (int i = 7; i >= 0; i--)
+                    BitStream.Add((chByte & (1 << i)) != 0);
+            }
+
+            BitPointer = 0;
+        }
+
+        // Return full bitstream
+        public List<bool> GetBitStream() => BitStream;
+
+        public int GetLength() => BitStream.Count;
+
+        // Return next bit for embedding
+        public bool GetNextBit()
+        {
+            if (BitPointer >= BitStream.Count)
+                throw new InvalidOperationException("All bits have been read.");
+            return BitStream[BitPointer++];
+        }
+
+        public void ResetBitPointer()
+        {
+            BitPointer = 0;
+        }
+
+        // Convert bitstream back to string
+        public static string ToMessage(List<bool> bitstream)
+        {
+            if (bitstream.Count < 8)
+                return "<invalid bitstream>";
+
+            // Extract length prefix
+            int msgLength = 0;
+            for (int i = 0; i < 8; i++)
+                msgLength = (msgLength << 1) + (bitstream[i] ? 1 : 0);
+
+            StringBuilder sb = new StringBuilder();
+            int byteCount = 0;
+
+            for (int i = 8; i + 7 < bitstream.Count && byteCount < msgLength; i += 8)
+            {
+                int charVal = 0;
+                for (int j = 0; j < 8; j++)
+                    charVal = (charVal << 1) + (bitstream[i + j] ? 1 : 0);
+                sb.Append((char)charVal);
+                byteCount++;
+            }
+
+            return sb.ToString();
+        }
+
+        public override string ToString()
+        {
+            return $"Watermark[{Message}], Bits={BitStream.Count}";
         }
     }
 }

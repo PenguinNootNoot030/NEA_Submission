@@ -1,80 +1,68 @@
 ﻿using System;
 namespace Testing_WPF
 {
-	public class DCTEmbedder: Embedder
-	{
+    public class DCTEmbedder : Embedder
+    {
 
-        private Block block;
-        private Watermark watermark;
-        private int BitPlane;
-        private int BlockSize;
-        private double EmbeddingStrength;
-
-        // Constructor
-        public DCTEmbedder(): base()
+        public override void EmbedWatermark(Watermark wm)
         {
-            
-        }
-        
+            // Prepare watermark and bitstream
+            GenerateWatermark(wm);
 
-        // Embed a single bit into the DCT coefficients
-        private void EmbedBitInDCT(Matrix dctBlock, byte bit)
-        {
-            // Choose a coefficient to modify (e.g., the second-lowest frequency)
-            int row = 1;
-            int col = 1;
+            if (blocks == null)
+                throw new InvalidOperationException("No block grid provided to DCTEmbedder.");
 
-            double coefficient = dctBlock.GetElement(row, col);
+            int rows = blocks.GetLength(0);
+            int cols = blocks.GetLength(1);
+            int bitIndex = 0;
 
-            // Modify the coefficient based on the bit
-            if (bit == 1)
+            for (int i = 0; i < rows && bitIndex < bitstream.Count; i++)
             {
-                coefficient += EmbeddingStrength;
-            }
-            else
-            {
-                coefficient -= EmbeddingStrength;
-            }
-
-            dctBlock.SetElement(row, col, coefficient);
-        }
-
-        // Apply the Discrete Cosine Transform to a block
-        public void ApplyDCT()
-        {
-            Methods.DCT(block);
-            
-        }
-
-        // Apply the Inverse Discrete Cosine Transform to a block
-        public void ApplyIDCT()
-        {
-            Methods.IDCT(block);
-            
-        }
-
-        
-
-        
-
-        // Convert a string message to an array of bits
-        private byte[] ConvertMessageToBits(string message)
-        {
-            byte[] bytes = System.Text.Encoding.ASCII.GetBytes(message);
-            byte[] bits = new byte[bytes.Length * 8];
-
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                for (int bit = 0; bit < 8; bit++)
+                for (int j = 0; j < cols && bitIndex < bitstream.Count; j++)
                 {
-                    bits[i * 8 + bit] = (byte)((bytes[i] >> bit) & 1);
+                    Block block = blocks[i, j];
+
+                    // Update Y from RGB if needed
+                    block.UpdateYCbCr();
+
+                    // Apply DCT to the block
+                    Methods.DCT(block);
+
+                    // Embed a bit in a safe coefficient (e.g., (4,3))
+                    EmbedBitInDCT(block, bitstream[bitIndex], 4, 3);
+                    bitIndex++;
+
+                    // Apply IDCT to return to spatial domain
+                    Methods.IDCT(block);
+
+                    // Update RGB from YCbCr
+                    block.UpdateARGB();
+
+                    // Save back the modified block
+                    ReplaceBlock(block, i, j);
                 }
             }
 
-            return bits;
+            if (bitIndex < bitstream.Count)
+                throw new Exception($"Bitstream too long for image capacity. Embedded {bitIndex}/{bitstream.Count} bits.");
         }
 
+        private void EmbedBitInDCT(Block block, bool bit, int row = 4, int col = 3)
+        {
+            Matrix Y = block.GetChannel("Y");
+            double val = Y.GetElement(row, col);
 
+            // Embed by adjusting LSB of the integer value
+            int intVal = (int)Math.Round(val);
+            if ((intVal % 2 == 0 && bit) || (intVal % 2 == 1 && !bit))
+                intVal += (bit ? 1 : -1);
+
+            Y.SetElement(row, col, intVal);
+        }
+
+        public override string GetEmbedderName() => "DCT Embedder";
+
+        public override bool SupportsColor() => false; // works on Y channel
     }
 }
 

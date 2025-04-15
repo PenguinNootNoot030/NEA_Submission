@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 namespace Testing_WPF
 {
     public class ImageRotation : Attack 
     {
+        /*
         double angleInDegrees;
         double angleInRadians;
         double cos;
@@ -82,6 +84,63 @@ namespace Testing_WPF
                 }
             }
             return result;
+        }
+        */
+        private float angle;
+
+        /// <summary>
+        /// Constructs a rotation attack with a specific angle in degrees
+        /// </summary>
+        public ImageRotation(float angleDegrees = 30f)
+        {
+            angle = ClampAngle(angleDegrees);
+        }
+
+        /// <summary>
+        /// Apply rotation attack to image
+        /// </summary>
+        public override Bitmap ApplyAttack(Bitmap image)
+        {
+            if (image == null) throw new ArgumentNullException(nameof(image));
+
+            // Calculate new dimensions
+            float radians = angle * (float)(Math.PI / 180.0);
+            double sin = Math.Abs(Math.Sin(radians));
+            double cos = Math.Abs(Math.Cos(radians));
+
+            int newWidth = (int)(image.Width * cos + image.Height * sin);
+            int newHeight = (int)(image.Width * sin + image.Height * cos);
+
+            Bitmap rotated = new Bitmap(newWidth, newHeight, PixelFormat.Format32bppArgb);
+            rotated.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using (Graphics g = Graphics.FromImage(rotated))
+            {
+                g.Clear(Color.Transparent);
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.TranslateTransform(newWidth / 2f, newHeight / 2f);
+                g.RotateTransform(angle);
+                g.TranslateTransform(-image.Width / 2f, -image.Height / 2f);
+                g.DrawImage(image, new Point(0, 0));
+            }
+
+            attackedImage = rotated;
+            return attackedImage;
+        }
+
+        /// <summary>
+        /// Returns display name of this attack
+        /// </summary>
+        public override string GetAttackName()
+        {
+            return $"Image Rotation [{angle}°]";
+        }
+
+        private float ClampAngle(float angle)
+        {
+            if (angle < -360f) return -360f;
+            if (angle > 360f) return 360f;
+            return angle;
         }
     }
 }
