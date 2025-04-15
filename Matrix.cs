@@ -76,7 +76,7 @@ namespace Testing_WPF
 		}
 
 		// create transpose of the given matrix : row becomes columns, columns becomes rows
-		public void TransposeMatrix()
+		public Matrix TransposeMatrix()
 		{
 			for (int i = 0; i < row; i++) //looping through the rows within the o_matrix
 			{
@@ -86,6 +86,7 @@ namespace Testing_WPF
                     t_matrix[j, i] = matrix[i, j];
 				}
 			}
+            return new Matrix(t_matrix);
 		}
         public Matrix Inverse()
         {

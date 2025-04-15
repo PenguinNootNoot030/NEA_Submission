@@ -111,7 +111,7 @@ namespace Testing_WPF
             int newWidth = (int)(image.Width * cos + image.Height * sin);
             int newHeight = (int)(image.Width * sin + image.Height * cos);
 
-            Bitmap rotated = new Bitmap(newWidth, newHeight, PixelFormat.Format32bppArgb);
+            Bitmap rotated = new Bitmap(newWidth, newHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             rotated.SetResolution(image.HorizontalResolution, image.VerticalResolution);
 
             using (Graphics g = Graphics.FromImage(rotated))

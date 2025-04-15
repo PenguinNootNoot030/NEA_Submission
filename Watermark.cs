@@ -8,7 +8,7 @@ namespace Testing_WPF
         private const int MaxLength = 50;
 
         private string Message;
-        private List<bool> BitStream;
+        private static List<bool> BitStream;
         private int BitPointer;
 
         public Watermark(string message)
@@ -46,7 +46,7 @@ namespace Testing_WPF
         }
 
         // Return full bitstream
-        public List<bool> GetBitStream() => BitStream;
+        public static List<bool> GetBitStream() => BitStream;
 
         public int GetLength() => BitStream.Count;
 

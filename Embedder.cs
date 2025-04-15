@@ -17,7 +17,7 @@ namespace Testing_WPF
         public virtual void GenerateWatermark(Watermark wm)
         {
             watermark = wm;
-            bitstream = watermark.GetBitStream();
+            bitstream = Watermark.GetBitStream();
         }
 
         /// <summary>

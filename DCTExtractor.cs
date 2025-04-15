@@ -31,7 +31,7 @@ namespace Testing_WPF
                 bitstream.Add(bit);
             }
 
-            return Watermark.DecodeBitstream(bitstream);
+            return Watermark.ToMessage(bitstream);
         }
 
         public override string GetExtractorName()

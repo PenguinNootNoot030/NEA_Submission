@@ -23,8 +23,8 @@ namespace Testing_WPF
                 return report.ToString();
             }
 
-            List<bool> originalBits = Watermark.GetBitStream(original);
-            List<bool> extractedBits = Watermark.StringToBitstream(extracted);
+            List<bool> originalBits = new List<bool>();//Watermark.GetBitStream(original);
+            List<bool> extractedBits = new List<bool>();//Watermark.ToMessage(extracted);
 
             int minLen = Math.Min(originalBits.Count, extractedBits.Count);
             int bitErrors = 0;

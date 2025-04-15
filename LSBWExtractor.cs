@@ -43,7 +43,7 @@ namespace Testing_WPF
                 }
             }
 
-            return Watermark.DecodeBitstream(bitstream);
+            return Watermark.ToMessage(bitstream);
         }
 
         public override string GetExtractorName()
