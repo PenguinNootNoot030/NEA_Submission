@@ -159,5 +159,17 @@ namespace Testing_WPF
             if (val > 1.0) return 1.0;
             return val;
         }
+        /*
+        private void ClampYChannel()
+        {
+            for (int i = 0; i < BlockSize; i++) 
+            {
+                for (int j = 0; j < BlockSize; j++) 
+                { double val = Y.GetElement(i, j);
+                    val = Math.Max(0.0, Math.Min(1.0, val));
+                    Y.SetElement(i, j, val); } 
+            }
+        }
+        */
     }
 }

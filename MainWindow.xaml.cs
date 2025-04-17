@@ -50,7 +50,7 @@ namespace Testing_WPF
             catch (Exception e)
             { MessageBox.Show($"Failed"); }
         }
-        private BitmapImage DisplayImage(Bitmap bmp)
+        private void DisplayImage(Bitmap bmp)
         {
             BitmapImage image = new BitmapImage();
             try
@@ -66,7 +66,7 @@ namespace Testing_WPF
             }
             catch (Exception e)
             { MessageBox.Show($"Failed"); }
-            return image;
+            MainPictureDisplay.Source= image;
         }
 
 
