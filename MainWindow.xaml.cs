@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Testing_WPF
 {
@@ -19,9 +21,13 @@ namespace Testing_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        ImageHandling ImageHandler { get; set; }
-        string filePath { get; set; }
+        ImageHandling ImageHandler = new ImageHandling();
+        string filePath;
         Bitmap bitmap;
+        int blocksize = 8;
+        Matrix A, R, G, B;
+        Block[,] blocks;
+        Watermark wm;
 
         List<string> labels_ParamArea;
 
@@ -36,11 +42,31 @@ namespace Testing_WPF
             try
             {
                 bitmap = new Bitmap(filePath);
+                bitmap = ImageHandler.TrimToBlockSize(bitmap, blocksize);
                 MainPictureDisplay.Source = new BitmapImage(new Uri(filePath));
+                (A,R,G,B) = ImageHandler.ConvertImageToMatrix(bitmap);
+                blocks = ImageHandler.SplitToBlocks(A, R, G, B, blocksize);
             }
             catch (Exception e)
             { MessageBox.Show($"Failed"); }
-        
+        }
+        private BitmapImage DisplayImage(Bitmap bmp)
+        {
+            BitmapImage image = new BitmapImage();
+            try
+            {
+                using (MemoryStream memory = new MemoryStream())
+                { bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                    memory.Position = 0;
+                    image.BeginInit();
+                    image.CacheOption = BitmapCacheOption.OnLoad;
+                    image.StreamSource = memory;
+                    image.EndInit();
+                }
+            }
+            catch (Exception e)
+            { MessageBox.Show($"Failed"); }
+            return image;
         }
 
 
@@ -142,23 +168,23 @@ namespace Testing_WPF
             switch (OperationSelected)
             {
                 case "DCT":
-                    labels_ParamArea = ["Message","Block Size","Embedding Strength","Quantization Factor","DCT Coeffient"];
-                    AppendTextblockToParamArea(ParamGrid);
+                    labels_ParamArea = ["Message", "DCT Coeffient Row", "DCT Coeffient Column", "Embedding Strength"];
+                    AppendTextblockToParamArea(ParamGrid); 
                     return;
                 case "LSBW":
-                    labels_ParamArea = ["Message", "BitPlane Depth", "Channel selection", "Pixel Selection Method"];
+                    labels_ParamArea = ["Message", "Channel selection"];
                     AppendTextblockToParamArea(ParamGrid);
                     return;
                 case "Rotation":
-                    labels_ParamArea = ["Rotation Angle", "Rotation Direction", "Interpoloation method"];
+                    labels_ParamArea = ["Rotation Angle"];
                     AppendTextblockToParamArea(ParamGrid);
                     return;
                 case "Blurring":
-                    labels_ParamArea = ["Blur Type", "Kernel Size", "Blur Intensity"];
+                    labels_ParamArea = ["Kernel Size", "Blur Intensity"];
                     AppendTextblockToParamArea(ParamGrid);
                     return;
                 case "Cropping":
-                    labels_ParamArea = ["X Start Pos", "Y start Pos", "Width", "Height"];
+                    labels_ParamArea = ["Crop Ratio"];
                     AppendTextblockToParamArea(ParamGrid);
                     return;
                 case "Compression":
@@ -181,33 +207,66 @@ namespace Testing_WPF
         {
             //Read all inputted values in ParamArea
             List<string> paramValues = new List<string>();
-            foreach (var child in ParamArea.Children)
-            { 
-                if (child is TextBox tb)
-                { 
-                    string value = tb.Text;
-                    paramValues.Add(value);
-                } 
+            foreach (var container in ParamArea.Children)
+            {
+                if (container is Grid grid)
+                {
+                    foreach (var child in grid.Children)
+                    {
+                        if (child is TextBox tb)
+                        {
+                            string value = tb.Text;
+                            paramValues.Add(value);
+                        }
+                    }
+                }
+                
             }
             switch (OperationSelected)
             {
                 case "DCT":
-                    
-                    return;
+                    wm = new Watermark(paramValues[0]);//new Watermark("where was the tea my friend where was the tea my");//placeholder
+                    Embedder DCTEmbedder = new DCTEmbedder(Convert.ToInt32(paramValues[1]), Convert.ToInt32(paramValues[2]), Convert.ToInt32(paramValues[3]));
+                    DCTEmbedder.SetBlockGrid(blocks);
+                    DCTEmbedder.EmbedWatermark(wm);
+                    Block[,] DCTmodifiedBlocks = DCTEmbedder.GetBlockGrid();
+                    bitmap = ImageHandler.MergeBlocksToImage(DCTmodifiedBlocks);
+                    DisplayImage(bitmap);
+                    MessageBox.Show($"Acomplished");
+                    break;
                 case "LSBW":
-                    
-                    return;
+                    wm = new Watermark(paramValues[0]);//placeholder
+                    Embedder LSBWEmbedder = new LSBWEmbedder(paramValues[1]);
+                    LSBWEmbedder.SetBlockGrid(blocks);
+                    LSBWEmbedder.EmbedWatermark(wm);
+                    Block[,] LSBWmodifiedBlocks = LSBWEmbedder.GetBlockGrid();
+                    bitmap = ImageHandler.MergeBlocksToImage(LSBWmodifiedBlocks);
+                    DisplayImage(bitmap);
+                    MessageBox.Show($"Acomplished");
+                    break;
                 case "Rotation":
-                    
-                    return;
+                    Attack rot_atk = new ImageRotation(float.Parse(paramValues[0]));
+                    bitmap = rot_atk.ApplyAttack(bitmap);
+                    DisplayImage(bitmap);
+                    MessageBox.Show($"Acomplished");
+                    break;
                 case "Blurring":
-                    
+                    Attack blur_atk = new ImageBlurring(Convert.ToInt32(paramValues[0]), Convert.ToDouble(paramValues[1]));
+                    bitmap = blur_atk.ApplyAttack(bitmap);
+                    DisplayImage(bitmap);
+                    MessageBox.Show($"Acomplished");
                     return;
                 case "Cropping":
-                    
+                    Attack crop_atk = new ImageRotation(float.Parse(paramValues[0]));
+                    bitmap = crop_atk.ApplyAttack(bitmap);
+                    DisplayImage(bitmap);
+                    MessageBox.Show($"Acomplished");
                     return;
                 case "Compression":
-                    
+                    Attack comp_atk = new ImageRotation(float.Parse(paramValues[0]));
+                    bitmap = comp_atk.ApplyAttack(bitmap);
+                    DisplayImage(bitmap);
+                    MessageBox.Show($"Acomplished");
                     return;
                 case "Check":
                     

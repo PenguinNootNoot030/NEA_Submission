@@ -15,7 +15,7 @@ namespace Testing_WPF
         {
             Message = message;
             if (!IsValid())
-                throw new ArgumentException("Invalid watermark message");
+                         throw new ArgumentException("Invalid watermark message");
 
             GenerateBitStream();
         }

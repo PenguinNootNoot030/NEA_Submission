@@ -10,6 +10,7 @@ namespace Testing_WPF
     public class ImageHandling
     {
         const int max_size = 1024;
+        public Block[,] blocks;
         //using filepath, load image and return as a matrix
         public (Matrix, Matrix, Matrix, Matrix) LoadImageToMatrix(string filePath)
         {
@@ -99,7 +100,7 @@ namespace Testing_WPF
             int rows = height / blockSize;
             int cols = width / blockSize;
 
-            Block[,] blocks = new Block[rows, cols];
+            blocks = new Block[rows, cols];
 
             for (int row = 0; row < rows; row++)
             {
@@ -113,7 +114,6 @@ namespace Testing_WPF
                     blocks[row, col] = new Block(blockA, blockR, blockG, blockB);
                 }
             }
-
             return blocks;
         }
 

@@ -5,10 +5,12 @@ namespace Testing_WPF
     public class ImageBlurring : Attack
     {
         private int kernelSize;
+        private double blurSigma;
 
-        public ImageBlurring(int size = 3)
+        public ImageBlurring(int size = 3, double blurSigma = 1.0)
         {
             kernelSize = ClampToOdd(size);
+            this.blurSigma = ClmapSigma(blurSigma);
         }
 
         public override Bitmap ApplyAttack(Bitmap image)
@@ -16,13 +18,13 @@ namespace Testing_WPF
             if (image == null)
                 throw new ArgumentNullException(nameof(image));
 
-            attackedImage = ApplyGaussianBlur(image, kernelSize);
+            attackedImage = ApplyGaussianBlur(image, kernelSize, blurSigma);
             return attackedImage;
         }
 
         public override string GetAttackName()
         {
-            return $"Blurring [{kernelSize}x{kernelSize}]";
+            return $"Blurring [{kernelSize}x{kernelSize}], sigma = {blurSigma}";
         }
 
         private int ClampToOdd(int size)
@@ -33,10 +35,17 @@ namespace Testing_WPF
             return size;
         }
 
-        private Bitmap ApplyGaussianBlur(Bitmap src, int kernelSize)
+        private double ClmapSigma(double sigma)
+        { 
+            if (sigma < 0.1) { return 0.1; }
+            if (sigma > 10) { return 10; }
+            return sigma;
+        }
+
+        private Bitmap ApplyGaussianBlur(Bitmap src, int kernelSize, double sigma)
         {
             Bitmap blurred = new Bitmap(src.Width, src.Height);
-            double[,] kernel = GenerateGaussianKernel(kernelSize, 1.0);
+            double[,] kernel = GenerateGaussianKernel(kernelSize, sigma);
             int radius = kernelSize / 2;
 
             for (int y = 0; y < src.Height; y++)

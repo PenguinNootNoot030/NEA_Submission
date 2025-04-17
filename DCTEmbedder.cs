@@ -3,6 +3,15 @@ namespace Testing_WPF
 {
     public class DCTEmbedder : Embedder
     {
+        private int coefRow;
+        private int coefCol;
+        private int strength;
+        public DCTEmbedder(int coefRow = 4, int coefCol = 3, int strength = 1)
+        {
+            this.coefRow = coefRow;
+            this.coefCol = coefCol;
+            this.strength = strength;
+        }
 
         public override void EmbedWatermark(Watermark wm)
         {
@@ -29,7 +38,7 @@ namespace Testing_WPF
                     Methods.DCT(block);
 
                     // Embed a bit in a safe coefficient (e.g., (4,3))
-                    EmbedBitInDCT(block, bitstream[bitIndex], 4, 3);
+                    EmbedBitInDCT(block, bitstream[bitIndex], coefRow, coefCol);
                     bitIndex++;
 
                     // Apply IDCT to return to spatial domain
@@ -47,7 +56,7 @@ namespace Testing_WPF
                 throw new Exception($"Bitstream too long for image capacity. Embedded {bitIndex}/{bitstream.Count} bits.");
         }
 
-        private void EmbedBitInDCT(Block block, bool bit, int row = 4, int col = 3)
+        private void EmbedBitInDCT(Block block, bool bit, int row, int col)
         {
             Matrix Y = block.GetChannel("Y");
             double val = Y.GetElement(row, col);
@@ -55,9 +64,15 @@ namespace Testing_WPF
             // Embed by adjusting LSB of the integer value
             int intVal = (int)Math.Round(val);
             if ((intVal % 2 == 0 && bit) || (intVal % 2 == 1 && !bit))
+            { intVal += (bit ? strength : -strength); }
+
+            Y.SetElement(row, col, intVal);
+            /*
+            if ((intVal % 2 == 0 && bit) || (intVal % 2 == 1 && !bit))
                 intVal += (bit ? 1 : -1);
 
             Y.SetElement(row, col, intVal);
+            */
         }
 
         public override string GetEmbedderName() => "DCT Embedder";
