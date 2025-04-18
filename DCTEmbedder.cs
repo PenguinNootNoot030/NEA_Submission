@@ -75,8 +75,17 @@ namespace Testing_WPF
 
             // Embed by adjusting LSB of the integer value
             int intVal = (int)Math.Round(val);
-            if ((intVal % 2 == 0 && bit) || (intVal % 2 == 1 && !bit))
-            { intVal += (bit ? strength : -strength); }
+            int parity = intVal % 2;
+            int desiredPArity = bit ? 1 : 0; ;
+
+            //if ((intVal % 2 == 0 && bit) || (intVal % 2 == 1 && !bit))
+            //if ((intVal / strength) % 2 != (bit ? 1 : 0)) 
+            //{ intVal += (bit ? strength : -strength); }
+            if (parity != desiredPArity)
+            { //ensure stregth is odd to filp the parity bit
+                int safeStrength = (strength%2 ==0)? strength +1 : strength;
+                intVal += (bit ? safeStrength : -safeStrength);
+            }
 
             Y.SetElement(row, col, intVal);
             block.SetChannel("Y", Y);

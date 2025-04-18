@@ -38,7 +38,7 @@ namespace Testing_WPF
                 
                 double val = freq.GetElement(coefRow, coefCol);
                 int intVal = (int)Math.Round(val);
-                bool bit = (intVal % 2 != 0); // parity: 1 = odd = true
+                bool bit = ((intVal/strength) % 2 != 0); // parity: 1 = odd = true
 
                 bitstream.Add(bit);
             }

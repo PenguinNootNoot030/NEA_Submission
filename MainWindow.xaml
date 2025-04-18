@@ -8,7 +8,7 @@
         Title="MainWindow" Height="450" Width="800" Background="AliceBlue">
     <Grid Margin="0,0,0,-6">
 
-        <Image x:Name="MainPictureDisplay" HorizontalAlignment="Left" Height="260" Margin="38,18,0,0" VerticalAlignment="Top" Width="199" RenderTransformOrigin="-4.405,-0.395"/>
+        <Image x:Name="MainPictureDisplay" HorizontalAlignment="Left" Height="260" Margin="38,18,0,0" VerticalAlignment="Top" Width="391" RenderTransformOrigin="-4.405,-0.395"/>
 
         <!--Buttons-->
         <Button x:Name="ClearButton" Content="Clear" HorizontalAlignment="Left" Margin="167,291,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.277,0.609" Height="34" Width="76" Click="Clear_Button_Click"/>
@@ -27,12 +27,10 @@
         <!--Labels-->
         <Label Content="Mode" HorizontalAlignment="Left" Margin="438,25,0,0" VerticalAlignment="Top" Width="59" RenderTransformOrigin="0.61,0.618"/>
 
-        <StackPanel x:Name="ParamArea" Orientation= "Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Height="260" Width="291" Margin="485,65,0,0" Background="Lavender"/>
+        <StackPanel x:Name="ParamArea" Orientation= "Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Height="260" Width="338" Margin="438,65,0,0" Background="Lavender"/>
         <Button x:Name="ApplyButton" Content="Apply" HorizontalAlignment="Left" Margin="698,277,0,0" VerticalAlignment="Top" Height="48" Width="75" Click="ApplyButton_Click"/>
         <Button x:Name="UploadButton" Content="Upload" HorizontalAlignment="Left" Margin="630,347,0,0" VerticalAlignment="Top" Height="34" Width="76" Click="UploadButton_Click"/>
         <TextBox x:Name="FilePath_TextBox" HorizontalAlignment="Left" Margin="106,353,0,0" TextWrapping="Wrap" Text="Please enter the image's file path..." VerticalAlignment="Top" Width="501" Height="19"/>
         <TextBlock HorizontalAlignment="Left" Margin="43,353,0,0" TextWrapping="Wrap" Text="File Path:" VerticalAlignment="Top"/>
-        <Image x:Name="FreqDomainDisplay" HorizontalAlignment="Left" Height="260" Margin="243,18,0,0" VerticalAlignment="Top" Width="195"/>
-
     </Grid>
 </Window>

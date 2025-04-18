@@ -82,7 +82,7 @@ namespace Testing_WPF
 			{
 				for (int j = 0; j < column; j++) //looping through the items on the rows of the o_matrix
 				{
-                    Console.WriteLine(matrix[i, j]);
+                    //Console.WriteLine(matrix[i, j]);
                     t_matrix[j, i] = matrix[i, j];
 				}
 			}
@@ -166,10 +166,10 @@ namespace Testing_WPF
                         for (int i = 0; i < a.GetColumn(); i++)  
                         {
                             res_element += a.GetElement(z, i) * b.GetElement(i, j);
-                            Console.WriteLine($"{z},{i},{j}::{a.GetElement(z, i)},{b.GetElement(i,j)},{a.GetElement(z, i) * b.GetElement(i,j)}");
+                            //Console.WriteLine($"{z},{i},{j}::{a.GetElement(z, i)},{b.GetElement(i,j)},{a.GetElement(z, i) * b.GetElement(i,j)}");
                         }
                         result.SetElement(z, j, res_element);
-                        Console.WriteLine(res_element);
+                        //Console.WriteLine(res_element);
                         res_element = 0;
                     }
                 }
