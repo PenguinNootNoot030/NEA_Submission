@@ -51,9 +51,11 @@ namespace Testing_WPF
         // Convert ARGB → YCbCr
         public void ARGB_YCbCr_Converter()
         {
+            
             Y = new Matrix(BlockSize, BlockSize);
             Cb = new Matrix(BlockSize, BlockSize);
             Cr = new Matrix(BlockSize, BlockSize);
+            
 
             for (int i = 0; i < BlockSize; i++)
             {
@@ -64,8 +66,8 @@ namespace Testing_WPF
                     double b = B.GetElement(i, j);
 
                     double y = 0.299 * r + 0.587 * g + 0.114 * b;
-                    double cb = -0.168736 * r - 0.331264 * g + 0.5 * b + 0.5;
-                    double cr = 0.5 * r - 0.418688 * g - 0.081312 * b + 0.5;
+                    double cb = -0.168736 * r - 0.331264 * g + 0.5 * b;
+                    double cr = 0.5 * r - 0.418688 * g - 0.081312 * b;
 
                     Y.SetElement(i, j, Clamp(y));
                     Cb.SetElement(i, j, Clamp(cb));
@@ -77,17 +79,19 @@ namespace Testing_WPF
         // Convert YCbCr → ARGB
         public void YCbCr_ARGB_Converter()
         {
+            
             R = new Matrix(BlockSize, BlockSize);
             G = new Matrix(BlockSize, BlockSize);
             B = new Matrix(BlockSize, BlockSize);
+            
 
             for (int i = 0; i < BlockSize; i++)
             {
                 for (int j = 0; j < BlockSize; j++)
                 {
-                    double y = Y.GetElement(i, j);
-                    double cb = Cb.GetElement(i, j) - 0.5;
-                    double cr = Cr.GetElement(i, j) - 0.5;
+                    double y = Y.GetElement(i, j);  
+                    double cb = Cb.GetElement(i, j);
+                    double cr = Cr.GetElement(i, j);
 
                     double r = y + 1.402 * cr;
                     double g = y - 0.344136 * cb - 0.714136 * cr;
@@ -155,9 +159,7 @@ namespace Testing_WPF
 
         private double Clamp(double val)
         {
-            if (val < 0.0) return 0.0;
-            if (val > 1.0) return 1.0;
-            return val;
+            return Math.Max(0.0, Math.Min(1.0, val));
         }
         /*
         private void ClampYChannel()

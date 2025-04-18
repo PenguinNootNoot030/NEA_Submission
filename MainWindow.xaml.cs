@@ -109,8 +109,8 @@ namespace Testing_WPF
             }
             else if (selectedOption == "Evaluate")
             {
-                OptionSelect.Items.Add(new ComboBoxItem { Content = "Check" });
-                OptionSelect.Items.Add(new ComboBoxItem { Content = "Identify" });
+                OptionSelect.Items.Add(new ComboBoxItem { Content = "DCT Embed Check" });
+                OptionSelect.Items.Add(new ComboBoxItem { Content = "LSBW Embed Check" });
             }
 
             // Optionally set the first item as selected in OptionSelect
@@ -191,11 +191,11 @@ namespace Testing_WPF
                     labels_ParamArea = ["Compression Type", "Compression Format", "Compression Quality"];
                     AppendTextblockToParamArea(ParamGrid);
                     return;
-                case "Check":
+                case "DCT Embed Check":
                     labels_ParamArea = ["Scanned Block", "Original Message"];
                     AppendTextblockToParamArea(ParamGrid);
                     return;
-                case "Identify":
+                case "LSBW Embed Check":
                     labels_ParamArea = ["Scanned Block", "Original Message", "If Corrupted"];
                     AppendTextblockToParamArea(ParamGrid);
                     return;
@@ -268,11 +268,23 @@ namespace Testing_WPF
                     DisplayImage(bitmap);
                     MessageBox.Show($"Acomplished");
                     return;
-                case "Check":
-                    
+                case "DCT Embed Check":
+                    bitmap = ImageHandler.TrimToBlockSize(bitmap, blocksize);
+                    (A, R, G, B) = ImageHandler.ConvertImageToMatrix(bitmap);
+                    blocks = ImageHandler.SplitToBlocks(A, R, G, B, blocksize);
+                    Extractor DCTExtractor = new DCTExtractor();
+                    DCTExtractor.SetBlockGrid(blocks);
+                    string DCTExtractedMessage = DCTExtractor.ExtractWatermark();
+                    MessageBox.Show(DCTExtractedMessage );
                     return;
-                case "Identify":
-                    
+                case "LSBW Embed Check":
+                    bitmap = ImageHandler.TrimToBlockSize(bitmap, blocksize);
+                    (A, R, G, B) = ImageHandler.ConvertImageToMatrix(bitmap);
+                    blocks = ImageHandler.SplitToBlocks(A, R, G, B, blocksize);
+                    Extractor extractor = new LSBWExtractor();
+                    extractor.SetBlockGrid(blocks);
+                    string LSBWExtractedMessage = extractor.ExtractWatermark();
+                    MessageBox.Show(LSBWExtractedMessage);
                     return;
             }
 

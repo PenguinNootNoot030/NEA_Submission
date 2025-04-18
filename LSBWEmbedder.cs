@@ -22,11 +22,9 @@ namespace Testing_WPF
             int cols = blocks.GetLength(1);
             int bitIndex = 0;
 
-            for (int i = 0; i < rows && bitIndex < bitstream.Count; i++)
+            foreach (var (i, j) in traversalOrder)
             {
-                for (int j = 0; j < cols && bitIndex < bitstream.Count; j++)
-                {
-                    Block block = blocks[i, j];
+                Block block = blocks[i, j];
 
                     if (embedChannel == "Y")
                         block.UpdateYCbCr(); // If embedding in luminance
@@ -52,7 +50,7 @@ namespace Testing_WPF
                         block.UpdateARGB(); // Restore RGB from YCbCr
 
                     ReplaceBlock(block, i, j);
-                }
+                
             }
 
             if (bitIndex < bitstream.Count)

@@ -8,6 +8,8 @@ namespace Testing_WPF
         protected List<bool> bitstream;            // Message in binary
         protected int blockSize;                   // Size of each block (e.g., 8)
         protected Block[,] blocks;                 // Full image in block form
+        protected ImageHandling.QuadTreeNode treeRoot;
+        protected List<(int row, int col)> traversalOrder;
 
         public Embedder() { }
 
@@ -59,7 +61,10 @@ namespace Testing_WPF
         {
             blocks = blockGrid;
             if (blocks != null && blocks.Length > 0)
-                blockSize = blocks[0, 0].GetBlockSize();
+            { blockSize = blocks[0, 0].GetBlockSize(); }
+            ImageHandling handler = new ImageHandling();
+            treeRoot = handler.BuildQuadTree(blocks);
+            traversalOrder = handler.TraverseTreeDFS(treeRoot);
         }
 
         /// <summary>

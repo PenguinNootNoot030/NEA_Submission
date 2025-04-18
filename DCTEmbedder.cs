@@ -6,6 +6,7 @@ namespace Testing_WPF
         private int coefRow;
         private int coefCol;
         private int strength;
+
         public DCTEmbedder(int coefRow = 4, int coefCol = 3, int strength = 1)
         {
             this.coefRow = coefRow;
@@ -25,38 +26,36 @@ namespace Testing_WPF
             int cols = blocks.GetLength(1);
             int bitIndex = 0;
 
-            for (int i = 0; i < rows && bitIndex < bitstream.Count; i++)
+            foreach (var(i,j) in traversalOrder)
             {
-                for (int j = 0; j < cols && bitIndex < bitstream.Count; j++)
-                {
-                    Block block = blocks[i, j];
+                if (bitIndex >= bitstream.Count) { break;}
+                Block block = blocks[i, j];
 
-                    // Update Y from RGB if needed
-                    block.UpdateYCbCr();
+                // Update Y from RGB if needed
+                block.UpdateYCbCr();
 
-                    // Apply DCT to the block
-                    Methods.DCT(block);
+                // Apply DCT to the block
+                Methods.DCT(block);
 
-                    // Embed a bit in a safe coefficient (e.g., (4,3))
-                    EmbedBitInDCT(block, bitstream[bitIndex], coefRow, coefCol);
-                    bitIndex++;
+                // Embed a bit in a safe coefficient (e.g., (4,3))
+                EmbedBitInDCT(ref block, bitstream[bitIndex], coefRow, coefCol);
+                bitIndex++;
 
-                    // Apply IDCT to return to spatial domain
-                    Methods.IDCT(block);
+                // Apply IDCT to return to spatial domain
+                Methods.IDCT(block);
 
-                    // Update RGB from YCbCr
-                    block.UpdateARGB();
+                // Update RGB from YCbCr
+                block.UpdateARGB();
 
-                    // Save back the modified block
-                    ReplaceBlock(block, i, j);
-                }
+                // Save back the modified block
+                ReplaceBlock(block, i, j);
             }
 
             if (bitIndex < bitstream.Count)
                 throw new Exception($"Bitstream too long for image capacity. Embedded {bitIndex}/{bitstream.Count} bits.");
         }
 
-        private void EmbedBitInDCT(Block block, bool bit, int row, int col)
+        private void EmbedBitInDCT(ref Block block, bool bit, int row, int col)
         {
             Matrix Y = block.GetChannel("Y");
             double val = Y.GetElement(row, col);
@@ -67,6 +66,7 @@ namespace Testing_WPF
             { intVal += (bit ? strength : -strength); }
 
             Y.SetElement(row, col, intVal);
+            block.SetChannel("Y", Y);
             /*
             if ((intVal % 2 == 0 && bit) || (intVal % 2 == 1 && !bit))
                 intVal += (bit ? 1 : -1);

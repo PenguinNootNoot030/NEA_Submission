@@ -21,17 +21,17 @@ namespace Testing_WPF
         //convert a matrix back into an image
         public Bitmap ConvertMatrixToImage(Matrix source_Amat, Matrix source_Rmat, Matrix source_Gmat, Matrix source_Bmat)
         {
-            int width = source_Amat.GetRow();
-            int height = source_Amat.GetColumn();
+            int height = source_Amat.GetRow();
+            int width = source_Amat.GetColumn();
             Bitmap res_bmp = new Bitmap(width, height);
-            for (int i = 0; i < width; i++)
+            for (int i = 0; i < height; i++)
             {
                 for (int j = 0; j < width; j++)
                 {
-                    int alpha = (int)(source_Amat.GetElement(i, j) * 255);
-                    int red = (int)(source_Rmat.GetElement(i, j) * 255);
-                    int green = (int)(source_Gmat.GetElement(i, j) * 255);
-                    int blue = (int)(source_Bmat.GetElement(i, j) * 255);
+                    int alpha = ClampToByte(source_Amat.GetElement(i, j) );
+                    int red = ClampToByte(source_Rmat.GetElement(i, j));
+                    int green = ClampToByte(source_Gmat.GetElement(i, j));
+                    int blue = ClampToByte(source_Bmat.GetElement(i, j));
                     Color pixel = Color.FromArgb(alpha, red, green, blue);
                     res_bmp.SetPixel(i, j, pixel);
                 }
@@ -40,27 +40,31 @@ namespace Testing_WPF
         }
         public (Matrix, Matrix, Matrix, Matrix) ConvertImageToMatrix(Bitmap source_bmp)
         {
-            int rows = source_bmp.Width;
-            int columns = source_bmp.Height;
+            int width = source_bmp.Width;
+            int height = source_bmp.Height;
             //Matrix res_mat = new Matrix(rows,columns);
-            Matrix A_scale = new Matrix(rows, columns);
-            Matrix R_scale = new Matrix(rows, columns);
-            Matrix G_scale = new Matrix(rows, columns);
-            Matrix B_scale = new Matrix(rows, columns);
-            for (int i = 0; i < rows; i++)
+            Matrix A_scale = new Matrix(height, width);
+            Matrix R_scale = new Matrix(height, width);
+            Matrix G_scale = new Matrix(height, width);
+            Matrix B_scale = new Matrix(height, width);
+            for (int i = 0; i < height; i++)
             {
-                for (int j = 0; j < columns; j++)
+                for (int j = 0; j < width; j++)
                 {
-                    Color pixel = source_bmp.GetPixel(i, j);
-                    A_scale.SetElement(i, j, pixel.A / 255);
-                    R_scale.SetElement(i, j, pixel.R / 255);
-                    G_scale.SetElement(i, j, pixel.G / 255);
-                    B_scale.SetElement(i, j, pixel.B / 255);
+                    Color pixel = source_bmp.GetPixel(j, i);
+                    A_scale.SetElement(i, j, pixel.A / 255.0);
+                    R_scale.SetElement(i, j, pixel.R / 255.0);
+                    G_scale.SetElement(i, j, pixel.G / 255.0);
+                    B_scale.SetElement(i, j, pixel.B / 255.0);
                 }
             }
             return (A_scale, R_scale, G_scale, B_scale);
         }
 
+        private int ClampToByte(double value)
+        { int v = (int)Math.Round(value * 255.0);
+            return Math.Max(0, Math.Min(255, v));
+        }
 
 
         //debugging
@@ -142,17 +146,22 @@ namespace Testing_WPF
                             int x = col * blockSize + j;
                             int y = row * blockSize + i;
 
+                            int alpha = ClampToByte(A.GetElement(i, j));
+                            int red = ClampToByte(R.GetElement(i, j));
+                            int green = ClampToByte(G.GetElement(i, j));
+                            int blue = ClampToByte(B.GetElement(i, j));
+                            /*
                             int a = (int)(A.GetElement(i, j) * 255);
                             int r = (int)(R.GetElement(i, j) * 255);
                             int g = (int)(G.GetElement(i, j) * 255);
                             int b = (int)(B.GetElement(i, j) * 255);
+                            */
 
-                            result.SetPixel(x, y, Color.FromArgb(a, r, g, b));
+                            result.SetPixel(x, y, Color.FromArgb(alpha, red, green, blue));
                         }
                     }
                 }
             }
-
             return result;
         }
         public class QuadTreeNode
@@ -161,7 +170,8 @@ namespace Testing_WPF
             public QuadTreeNode TopLeft, TopRight, BottomLeft, BottomRight;
             public int Row, Col;
 
-            public bool IsLeaf => TopLeft == null && TopRight == null;
+            public bool IsLeaf => TopLeft == null && TopRight == null &&
+                                  BottomLeft == null && BottomRight == null;
 
             public QuadTreeNode(Block block, int row, int col)
             {
@@ -169,11 +179,51 @@ namespace Testing_WPF
                 Row = row;
                 Col = col;
             }
-
         }
 
+        public QuadTreeNode BuildQuadTree(Block[,] blocks)
+        {
+            int rows = blocks.GetLength(0);
+            int cols = blocks.GetLength(1);
+            Console.WriteLine($"[QuadTree] Building tree for grid {rows}x{cols}");
+            return BuildRecursive(blocks, 0, 0, rows, cols);
+        }
 
-        // (Optional) Traverse to list coordinates for debug
+        private QuadTreeNode BuildRecursive(Block[,] blocks, int startRow, int startCol, int height, int width)
+        {
+            int totalRows = blocks.GetLength(0);
+            int totalCols = blocks.GetLength(1);
+
+            if (height <= 1 && width <= 1)
+            {
+                if (startRow < totalRows && startCol < totalCols)
+                {
+                    return new QuadTreeNode(blocks[startRow, startCol], startRow, startCol);
+                }
+                else
+                {
+                    return null; // Safety net for any stray overflow
+                }
+            }
+
+            int halfHeight = height / 2;
+            int halfWidth = width / 2;
+
+            // Ensure at least 1 for odd sizes
+            if (halfHeight == 0 && height > 1) halfHeight = 1;
+            if (halfWidth == 0 && width > 1) halfWidth = 1;
+
+            QuadTreeNode node = new QuadTreeNode(null, startRow, startCol)
+            {
+                TopLeft = BuildRecursive(blocks, startRow, startCol, halfHeight, halfWidth),
+                TopRight = BuildRecursive(blocks, startRow, startCol + halfWidth, halfHeight, width - halfWidth),
+                BottomLeft = BuildRecursive(blocks, startRow + halfHeight, startCol, height - halfHeight, halfWidth),
+                BottomRight = BuildRecursive(blocks, startRow + halfHeight, startCol + halfWidth, height - halfHeight, width - halfWidth)
+            };
+
+            return node;
+        }
+
         public List<(int row, int col)> TraverseTreeDFS(QuadTreeNode node)
         {
             List<(int, int)> result = new List<(int, int)>();
@@ -184,6 +234,7 @@ namespace Testing_WPF
         private void TraverseDFS_Helper(QuadTreeNode node, List<(int, int)> output)
         {
             if (node == null) return;
+
             if (node.IsLeaf)
             {
                 output.Add((node.Row, node.Col));
@@ -195,33 +246,7 @@ namespace Testing_WPF
             TraverseDFS_Helper(node.BottomLeft, output);
             TraverseDFS_Helper(node.BottomRight, output);
         }
-        public QuadTreeNode BuildQuadTree(Block[,] blocks)
-        {
-            int rows = blocks.GetLength(0);
-            int cols = blocks.GetLength(1);
-            return BuildRecursive(blocks, 0, 0, rows, cols);
-        }
 
-        private QuadTreeNode BuildRecursive(Block[,] blocks, int startRow, int startCol, int height, int width)
-        {
-            if (height == 1 && width == 1)
-            {
-                return new QuadTreeNode(blocks[startRow, startCol], startRow, startCol);
-            }
 
-            int midRow = startRow + height / 2;
-            int midCol = startCol + width / 2;
-
-            QuadTreeNode node = new QuadTreeNode(null, startRow, startCol)
-            {
-                TopLeft = BuildRecursive(blocks, startRow, startCol, height / 2, width / 2),
-                TopRight = BuildRecursive(blocks, startRow, midCol, height / 2, width - width / 2),
-                BottomLeft = BuildRecursive(blocks, midRow, startCol, height - height / 2, width / 2),
-                BottomRight = BuildRecursive(blocks, midRow, midCol, height - height / 2, width - width / 2)
-            };
-
-            return node;
-        }
     }
-
 }
