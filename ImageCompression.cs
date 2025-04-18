@@ -19,9 +19,9 @@ namespace Testing_WPF
 
             ImageHandling handler = new ImageHandling();
             Bitmap trimmed = handler.TrimToBlockSize(image, blockSize);
-            (Matrix,Matrix,Matrix,Matrix) ARGB = handler.ConvertImageToMatrix(trimmed); // A, R, G, B
+            Block ARGB = handler.ConvertImageToMatrix(trimmed); // A, R, G, B
             
-            Block[,] blocks = handler.SplitToBlocks(ARGB.Item1, ARGB.Item2, ARGB.Item3, ARGB.Item4, blockSize);
+            Block[,] blocks = handler.SplitToBlocks(ARGB.GetChannel("A"), ARGB.GetChannel("R"), ARGB.GetChannel("G"), ARGB.GetChannel("B"), blockSize);
 
             int rows = blocks.GetLength(0);
             int cols = blocks.GetLength(1);

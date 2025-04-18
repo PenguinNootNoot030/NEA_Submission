@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Reflection.Metadata;
 namespace Testing_WPF
 {
     public class ImageRotation : Attack 
@@ -20,7 +21,7 @@ namespace Testing_WPF
             rotationMatrix = new Matrix(new double[,] { { cos, -sin }, { sin, cos } });
         }
 
-        public override Bitmap Apply(Bitmap bmp)
+        public override Bitmap ApplyAttack(Bitmap bmp)
         {
             int width = bmp.Width;
             int height = bmp.Height;
@@ -85,7 +86,13 @@ namespace Testing_WPF
             }
             return result;
         }
+        public override string GetAttackName()
+        {
+            return $"Image Rotation [{angleInDegrees}°]";
+        }
         */
+
+       
         private float angle;
 
         /// <summary>
@@ -142,6 +149,7 @@ namespace Testing_WPF
             if (angle > 360f) return 360f;
             return angle;
         }
+        
     }
 }
 

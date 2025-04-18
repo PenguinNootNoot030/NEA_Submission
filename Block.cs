@@ -64,10 +64,14 @@ namespace Testing_WPF
                     double r = R.GetElement(i, j);
                     double g = G.GetElement(i, j);
                     double b = B.GetElement(i, j);
-
-                    double y = 0.299 * r + 0.587 * g + 0.114 * b;
-                    double cb = -0.168736 * r - 0.331264 * g + 0.5 * b;
-                    double cr = 0.5 * r - 0.418688 * g - 0.081312 * b;
+                    /*
+                    double y = 0.257 * r + 0.564 * g + 0.098 * b + 16 / 255.0;//0.299 * r + 0.587 * g + 0.114 * b;
+                    double cb = -0.148 * r - 0.291 * g + 0.439 * b + 128 / 255.0;//-0.168736 * r - 0.331264 * g + 0.5 * b + 0.5;
+                    double cr = 0.439 * r - 0.368 * g - 0.071 * b + 128 / 255.0;//0.5 * r - 0.418688 * g - 0.081312 * b + 0.5;
+                    */
+                    double y =0.299 * r + 0.587 * g + 0.114 * b;
+                    double cb = -0.168736 * r - 0.331264 * g + 0.5 * b + 0.5;
+                    double cr = 0.5 * r - 0.418688 * g - 0.081312 * b + 0.5;
 
                     Y.SetElement(i, j, Clamp(y));
                     Cb.SetElement(i, j, Clamp(cb));
@@ -93,9 +97,14 @@ namespace Testing_WPF
                     double cb = Cb.GetElement(i, j);
                     double cr = Cr.GetElement(i, j);
 
-                    double r = y + 1.402 * cr;
-                    double g = y - 0.344136 * cb - 0.714136 * cr;
-                    double b = y + 1.772 * cb;
+                    /*
+                    double r = 1.164 * (y - 16 / 255.0) + 1.596 * (cr - 128 / 255.0);//y + 1.403 * cr;
+                    double g = 1.164 * (y - 16 / 255.0) - 0.392 * (cb - 128 / 255.0) - 0.813 * (cr - 128 / 255.0); //y - 0.344 * cb - 0.714 * cr;
+                    double b = 1.164 * (y - 16 / 255.0) + 2.017 * (cb - 128 / 255.0);//y + 1.772 * cb;
+                    */
+                    double r = y + 1.403 * (cr - 0.5);
+                    double g = y - 0.344 * (cb - 0.5) - 0.714 * (cr - 0.5);
+                    double b = y + 1.772 * (cb - 0.5);
 
                     R.SetElement(i, j, Clamp(r));
                     G.SetElement(i, j, Clamp(g));

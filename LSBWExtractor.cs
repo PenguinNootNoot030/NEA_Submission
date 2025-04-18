@@ -10,7 +10,7 @@ namespace Testing_WPF
     {
         private string channel;
 
-        public LSBWExtractor(string targetChannel = "B")
+        public LSBWExtractor(string targetChannel)
         {
             channel = targetChannel.ToUpper();
         }

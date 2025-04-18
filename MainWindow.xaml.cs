@@ -25,7 +25,7 @@ namespace Testing_WPF
         string filePath;
         Bitmap bitmap;
         int blocksize = 8;
-        Matrix A, R, G, B;
+        Block ARGB;
         Block[,] blocks;
         Watermark wm;
 
@@ -44,8 +44,8 @@ namespace Testing_WPF
                 bitmap = new Bitmap(filePath);
                 bitmap = ImageHandler.TrimToBlockSize(bitmap, blocksize);
                 MainPictureDisplay.Source = new BitmapImage(new Uri(filePath));
-                (A,R,G,B) = ImageHandler.ConvertImageToMatrix(bitmap);
-                blocks = ImageHandler.SplitToBlocks(A, R, G, B, blocksize);
+                ARGB = ImageHandler.ConvertImageToMatrix(bitmap);
+                blocks = ImageHandler.SplitToBlocks(ARGB.GetChannel("A"), ARGB.GetChannel("R"), ARGB.GetChannel("G"), ARGB.GetChannel("B"), blocksize);
             }
             catch (Exception e)
             { MessageBox.Show($"Failed"); }
@@ -120,7 +120,6 @@ namespace Testing_WPF
             }
         }
 
-       
 
         private void AppendTextblockToParamArea(Grid ParamGrid)
         {
@@ -188,15 +187,15 @@ namespace Testing_WPF
                     AppendTextblockToParamArea(ParamGrid);
                     return;
                 case "Compression":
-                    labels_ParamArea = ["Compression Type", "Compression Format", "Compression Quality"];
+                    labels_ParamArea = ["Compression Strength"];
                     AppendTextblockToParamArea(ParamGrid);
                     return;
                 case "DCT Embed Check":
-                    labels_ParamArea = ["Scanned Block", "Original Message"];
+                    labels_ParamArea = ["DCT coefficient Row", "DCT coefficient Column", "Embedding stength"];
                     AppendTextblockToParamArea(ParamGrid);
                     return;
                 case "LSBW Embed Check":
-                    labels_ParamArea = ["Scanned Block", "Original Message", "If Corrupted"];
+                    labels_ParamArea = ["Embedding Channel"];
                     AppendTextblockToParamArea(ParamGrid);
                     return;
             }
@@ -225,7 +224,7 @@ namespace Testing_WPF
             switch (OperationSelected)
             {
                 case "DCT":
-                    wm = new Watermark(paramValues[0]);//new Watermark("where was the tea my friend where was the tea my");//placeholder
+                    wm = new Watermark(paramValues[0]);
                     Embedder DCTEmbedder = new DCTEmbedder(Convert.ToInt32(paramValues[1]), Convert.ToInt32(paramValues[2]), Convert.ToInt32(paramValues[3]));
                     DCTEmbedder.SetBlockGrid(blocks);
                     DCTEmbedder.EmbedWatermark(wm);
@@ -257,31 +256,35 @@ namespace Testing_WPF
                     MessageBox.Show($"Acomplished");
                     return;
                 case "Cropping":
-                    Attack crop_atk = new ImageRotation(float.Parse(paramValues[0]));
+                    Attack crop_atk = new ImageCropping(float.Parse(paramValues[0]));
                     bitmap = crop_atk.ApplyAttack(bitmap);
                     DisplayImage(bitmap);
                     MessageBox.Show($"Acomplished");
                     return;
                 case "Compression":
-                    Attack comp_atk = new ImageRotation(float.Parse(paramValues[0]));
+                    Attack comp_atk = new ImageCompression(float.Parse(paramValues[0]));
                     bitmap = comp_atk.ApplyAttack(bitmap);
                     DisplayImage(bitmap);
                     MessageBox.Show($"Acomplished");
                     return;
                 case "DCT Embed Check":
                     bitmap = ImageHandler.TrimToBlockSize(bitmap, blocksize);
-                    (A, R, G, B) = ImageHandler.ConvertImageToMatrix(bitmap);
-                    blocks = ImageHandler.SplitToBlocks(A, R, G, B, blocksize);
-                    Extractor DCTExtractor = new DCTExtractor();
+                    ARGB = ImageHandler.ConvertImageToMatrix(bitmap);
+                    blocks = ImageHandler.SplitToBlocks(ARGB.GetChannel("A"), ARGB.GetChannel("R"), ARGB.GetChannel("G"), ARGB.GetChannel("B"), blocksize);
+                    //(A, R, G, B) = ImageHandler.ConvertImageToMatrix(bitmap);
+                    //blocks = ImageHandler.SplitToBlocks(A, R, G, B, blocksize);
+                    Extractor DCTExtractor = new DCTExtractor(Convert.ToInt32(paramValues[0]), Convert.ToInt32(paramValues[1]), Convert.ToInt32(paramValues[2]));
                     DCTExtractor.SetBlockGrid(blocks);
                     string DCTExtractedMessage = DCTExtractor.ExtractWatermark();
                     MessageBox.Show(DCTExtractedMessage );
                     return;
                 case "LSBW Embed Check":
                     bitmap = ImageHandler.TrimToBlockSize(bitmap, blocksize);
-                    (A, R, G, B) = ImageHandler.ConvertImageToMatrix(bitmap);
-                    blocks = ImageHandler.SplitToBlocks(A, R, G, B, blocksize);
-                    Extractor extractor = new LSBWExtractor();
+                    ARGB = ImageHandler.ConvertImageToMatrix(bitmap);
+                    blocks = ImageHandler.SplitToBlocks(ARGB.GetChannel("A"), ARGB.GetChannel("R"), ARGB.GetChannel("G"), ARGB.GetChannel("B"), blocksize);
+                    //(A, R, G, B) = ImageHandler.ConvertImageToMatrix(bitmap);
+                    //blocks = ImageHandler.SplitToBlocks(A, R, G, B, blocksize);
+                    Extractor extractor = new LSBWExtractor(paramValues[0]);
                     extractor.SetBlockGrid(blocks);
                     string LSBWExtractedMessage = extractor.ExtractWatermark();
                     MessageBox.Show(LSBWExtractedMessage);

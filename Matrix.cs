@@ -229,6 +229,14 @@ namespace Testing_WPF
             }
             return identity;
         }
+        public void SMultiply(double s)
+        {
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column; j++)
+                    matrix[i, j] = matrix[i, j] * s;
+            }
+        }
     }
 }
 

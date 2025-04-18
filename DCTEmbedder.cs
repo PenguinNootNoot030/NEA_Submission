@@ -32,6 +32,10 @@ namespace Testing_WPF
                 Block block = blocks[i, j];
 
                 // Update Y from RGB if needed
+                Matrix tr1 = block.GetChannel("R").Clone();
+                Matrix tg1 = block.GetChannel("G").Clone();
+                Matrix tb1 = block.GetChannel("B").Clone();
+
                 block.UpdateYCbCr();
 
                 // Apply DCT to the block
@@ -46,6 +50,15 @@ namespace Testing_WPF
 
                 // Update RGB from YCbCr
                 block.UpdateARGB();
+                Matrix tr2 = block.GetChannel("R").Clone();
+                tr2.SMultiply(-1.0);
+                Matrix tg2 = block.GetChannel("G").Clone();
+                tg2.SMultiply(-1.0);
+                Matrix tb2= block.GetChannel("B").Clone();
+                tb2.SMultiply(-1.0);
+                tr1=tr1+ tr2;
+                tg1=tg1+ tg2;
+                tb1=tb1+ tb2;
 
                 // Save back the modified block
                 ReplaceBlock(block, i, j);

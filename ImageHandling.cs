@@ -12,11 +12,13 @@ namespace Testing_WPF
         const int max_size = 1024;
         public Block[,] blocks;
         //using filepath, load image and return as a matrix
+        /*
         public (Matrix, Matrix, Matrix, Matrix) LoadImageToMatrix(string filePath)
         {
             Bitmap bmp = new Bitmap(filePath);
             return ConvertImageToMatrix(bmp);
         }
+        */
 
         //convert a matrix back into an image
         public Bitmap ConvertMatrixToImage(Matrix source_Amat, Matrix source_Rmat, Matrix source_Gmat, Matrix source_Bmat)
@@ -38,7 +40,7 @@ namespace Testing_WPF
             }
             return res_bmp;
         }
-        public (Matrix, Matrix, Matrix, Matrix) ConvertImageToMatrix(Bitmap source_bmp)
+        public Block ConvertImageToMatrix(Bitmap source_bmp)
         {
             int width = source_bmp.Width;
             int height = source_bmp.Height;
@@ -58,7 +60,8 @@ namespace Testing_WPF
                     B_scale.SetElement(i, j, pixel.B / 255.0);
                 }
             }
-            return (A_scale, R_scale, G_scale, B_scale);
+            Block imageBlock = new Block(A_scale, R_scale, G_scale, B_scale);
+            return imageBlock;
         }
 
         private int ClampToByte(double value)
