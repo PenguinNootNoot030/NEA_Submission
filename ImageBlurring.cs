@@ -99,7 +99,7 @@ namespace Testing_WPF
                 }
             }
 
-            // Normalize
+            // Normalizes
             for (int y = 0; y < size; y++)
                 for (int x = 0; x < size; x++)
                     kernel[y, x] /= sum;

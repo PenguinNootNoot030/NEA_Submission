@@ -7,7 +7,7 @@ namespace Testing_WPF
         private int coefCol;
         private int strength;
 
-        public DCTEmbedder(int coefRow = 4, int coefCol = 3, int strength = 1)
+        public DCTEmbedder(int coefRow, int coefCol, int strength)
         {
             this.coefRow = coefRow;
             this.coefCol = coefCol;
@@ -31,17 +31,13 @@ namespace Testing_WPF
                 if (bitIndex >= bitstream.Count) { break;}
                 Block block = blocks[i, j];
 
-                // Update Y from RGB if needed
-                Matrix tr1 = block.GetChannel("R").Clone();
-                Matrix tg1 = block.GetChannel("G").Clone();
-                Matrix tb1 = block.GetChannel("B").Clone();
-
+                // Update Y from RGB 
                 block.UpdateYCbCr();
 
                 // Apply DCT to the block
                 Methods.DCT(block);
 
-                // Embed a bit in a safe coefficient (e.g., (4,3))
+                // Embed a bit 
                 EmbedBitInDCT(ref block, bitstream[bitIndex], coefRow, coefCol);
                 bitIndex++;
 
@@ -50,15 +46,6 @@ namespace Testing_WPF
 
                 // Update RGB from YCbCr
                 block.UpdateARGB();
-                Matrix tr2 = block.GetChannel("R").Clone();
-                tr2.SMultiply(-1.0);
-                Matrix tg2 = block.GetChannel("G").Clone();
-                tg2.SMultiply(-1.0);
-                Matrix tb2= block.GetChannel("B").Clone();
-                tb2.SMultiply(-1.0);
-                tr1=tr1+ tr2;
-                tg1=tg1+ tg2;
-                tb1=tb1+ tb2;
 
                 // Save back the modified block
                 ReplaceBlock(block, i, j);
@@ -78,9 +65,6 @@ namespace Testing_WPF
             int parity = intVal % 2;
             int desiredPArity = bit ? 1 : 0; ;
 
-            //if ((intVal % 2 == 0 && bit) || (intVal % 2 == 1 && !bit))
-            //if ((intVal / strength) % 2 != (bit ? 1 : 0)) 
-            //{ intVal += (bit ? strength : -strength); }
             if (parity != desiredPArity)
             { //ensure stregth is odd to filp the parity bit
                 int safeStrength = (strength%2 ==0)? strength +1 : strength;
@@ -89,12 +73,6 @@ namespace Testing_WPF
 
             Y.SetElement(row, col, intVal);
             block.SetChannel("Y", Y);
-            /*
-            if ((intVal % 2 == 0 && bit) || (intVal % 2 == 1 && !bit))
-                intVal += (bit ? 1 : -1);
-
-            Y.SetElement(row, col, intVal);
-            */
         }
 
         public override string GetEmbedderName() => "DCT Embedder";

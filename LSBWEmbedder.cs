@@ -4,9 +4,9 @@ namespace Testing_WPF
 	public class LSBWEmbedder: Embedder
 	{
 
-        private string embedChannel; // "R", "G", "B", or "Y"
+        private string embedChannel; // one of RGB
 
-        public LSBWEmbedder(string channel = "B")
+        public LSBWEmbedder(string channel)
         {
             embedChannel = channel.ToUpper();
         }
@@ -26,9 +26,6 @@ namespace Testing_WPF
             {
                 Block block = blocks[i, j];
 
-                    if (embedChannel == "Y")
-                        block.UpdateYCbCr(); // If embedding in luminance
-
                     Matrix target = block.GetChannel(embedChannel);
 
                     for (int x = 0; x < blockSize && bitIndex < bitstream.Count; x++)
@@ -45,9 +42,6 @@ namespace Testing_WPF
                             bitIndex++;
                         }
                     }
-
-                    if (embedChannel == "Y")
-                        block.UpdateARGB(); // Restore RGB from YCbCr
 
                     ReplaceBlock(block, i, j);
                 

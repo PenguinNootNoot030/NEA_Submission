@@ -30,6 +30,7 @@ namespace Testing_WPF
         Watermark wm;
 
         List<string> labels_ParamArea;
+        string OperationSelected = "";
 
         public MainWindow()
         {
@@ -48,7 +49,7 @@ namespace Testing_WPF
                 blocks = ImageHandler.SplitToBlocks(ARGB.GetChannel("A"), ARGB.GetChannel("R"), ARGB.GetChannel("G"), ARGB.GetChannel("B"), blocksize);
             }
             catch (Exception e)
-            { MessageBox.Show($"Failed"); }
+            { MessageBox.Show($"Image Upload Failed, please check the format of the file path."); }
         }
         private void DisplayImage(Bitmap bmp)
         {
@@ -65,7 +66,7 @@ namespace Testing_WPF
                 }
             }
             catch (Exception e)
-            { MessageBox.Show($"Failed"); }
+            { MessageBox.Show($"Image Upload Failed, please check the format of the bitmap"); }
             MainPictureDisplay.Source= image;
         }
 
@@ -73,7 +74,10 @@ namespace Testing_WPF
 
         //clearing the content within the image box
         private void Clear_Button_Click(object sender, RoutedEventArgs e)
-        { MainPictureDisplay.Source = null; }
+        { 
+            MainPictureDisplay.Source = null;
+            MessageBox.Show($"Content cleared.");
+        }
 
         
         private void ModeSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -89,14 +93,6 @@ namespace Testing_WPF
             // Populate the OptionSelect ComboBox based on the ModeSelect choice
             if (selectedOption == "Embed")
             {
-                TextBox inputTextBox = new TextBox
-                {
-                    Width = 200,
-                    Height = 30,
-                    Margin = new Thickness(0, 10, 0, 0),
-                    Name = "UserInputTextBox",
-                    Text = "Enter text for embedding..."
-                };
                 OptionSelect.Items.Add(new ComboBoxItem { Content = "DCT" });
                 OptionSelect.Items.Add(new ComboBoxItem { Content = "LSBW" });
             }
@@ -113,14 +109,14 @@ namespace Testing_WPF
                 OptionSelect.Items.Add(new ComboBoxItem { Content = "LSBW Embed Check" });
             }
 
-            // Optionally set the first item as selected in OptionSelect
+            // Set the first item as selected in OptionSelect, defaulted to *
             if (OptionSelect.Items.Count > 0)
             {
-                OptionSelect.SelectedIndex = 0; // Automatically select the first item
+                OptionSelect.SelectedIndex = 0; 
             }
         }
 
-
+        //Populate param area with the required number of input text boxes
         private void AppendTextblockToParamArea(Grid ParamGrid)
         {
             for (int i = 0; i < labels_ParamArea.Count(); i++)
@@ -153,8 +149,8 @@ namespace Testing_WPF
             }
             ParamArea.Children.Add(ParamGrid);
         }
-
-        string OperationSelected = "";
+        
+        //populate the param area with needed labels for the text boxes
         private void OptionSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             OperationSelected = (OptionSelect.SelectedItem as ComboBoxItem)?.Content.ToString();
@@ -231,63 +227,59 @@ namespace Testing_WPF
                     Block[,] DCTmodifiedBlocks = DCTEmbedder.GetBlockGrid();
                     bitmap = ImageHandler.MergeBlocksToImage(DCTmodifiedBlocks);
                     DisplayImage(bitmap);
-                    MessageBox.Show($"Acomplished");
+                    MessageBox.Show($"DCT embed accomplished!");
                     break;
                 case "LSBW":
-                    wm = new Watermark(paramValues[0]);//placeholder
+                    wm = new Watermark(paramValues[0]);
                     Embedder LSBWEmbedder = new LSBWEmbedder(paramValues[1]);
                     LSBWEmbedder.SetBlockGrid(blocks);
                     LSBWEmbedder.EmbedWatermark(wm);
                     Block[,] LSBWmodifiedBlocks = LSBWEmbedder.GetBlockGrid();
                     bitmap = ImageHandler.MergeBlocksToImage(LSBWmodifiedBlocks);
                     DisplayImage(bitmap);
-                    MessageBox.Show($"Acomplished");
+                    MessageBox.Show($"LSBW embed accomplished!");
                     break;
                 case "Rotation":
                     Attack rot_atk = new ImageRotation(float.Parse(paramValues[0]));
                     bitmap = rot_atk.ApplyAttack(bitmap);
                     DisplayImage(bitmap);
-                    MessageBox.Show($"Acomplished");
+                    MessageBox.Show($"Image rotation accomplished!");
                     break;
                 case "Blurring":
                     Attack blur_atk = new ImageBlurring(Convert.ToInt32(paramValues[0]), Convert.ToDouble(paramValues[1]));
                     bitmap = blur_atk.ApplyAttack(bitmap);
                     DisplayImage(bitmap);
-                    MessageBox.Show($"Acomplished");
+                    MessageBox.Show($"Image blurring accomplished");
                     return;
                 case "Cropping":
                     Attack crop_atk = new ImageCropping(float.Parse(paramValues[0]));
                     bitmap = crop_atk.ApplyAttack(bitmap);
                     DisplayImage(bitmap);
-                    MessageBox.Show($"Acomplished");
+                    MessageBox.Show($"Image Cropping accomplished");
                     return;
                 case "Compression":
                     Attack comp_atk = new ImageCompression(float.Parse(paramValues[0]));
                     bitmap = comp_atk.ApplyAttack(bitmap);
                     DisplayImage(bitmap);
-                    MessageBox.Show($"Acomplished");
+                    MessageBox.Show($"Image compression accomplished");
                     return;
                 case "DCT Embed Check":
                     bitmap = ImageHandler.TrimToBlockSize(bitmap, blocksize);
                     ARGB = ImageHandler.ConvertImageToMatrix(bitmap);
                     blocks = ImageHandler.SplitToBlocks(ARGB.GetChannel("A"), ARGB.GetChannel("R"), ARGB.GetChannel("G"), ARGB.GetChannel("B"), blocksize);
-                    //(A, R, G, B) = ImageHandler.ConvertImageToMatrix(bitmap);
-                    //blocks = ImageHandler.SplitToBlocks(A, R, G, B, blocksize);
                     Extractor DCTExtractor = new DCTExtractor(Convert.ToInt32(paramValues[0]), Convert.ToInt32(paramValues[1]), Convert.ToInt32(paramValues[2]));
                     DCTExtractor.SetBlockGrid(blocks);
                     string DCTExtractedMessage = DCTExtractor.ExtractWatermark();
-                    MessageBox.Show(DCTExtractedMessage );
+                    MessageBox.Show($"Extracted Message:{DCTExtractedMessage}");
                     return;
                 case "LSBW Embed Check":
                     bitmap = ImageHandler.TrimToBlockSize(bitmap, blocksize);
                     ARGB = ImageHandler.ConvertImageToMatrix(bitmap);
                     blocks = ImageHandler.SplitToBlocks(ARGB.GetChannel("A"), ARGB.GetChannel("R"), ARGB.GetChannel("G"), ARGB.GetChannel("B"), blocksize);
-                    //(A, R, G, B) = ImageHandler.ConvertImageToMatrix(bitmap);
-                    //blocks = ImageHandler.SplitToBlocks(A, R, G, B, blocksize);
                     Extractor extractor = new LSBWExtractor(paramValues[0]);
                     extractor.SetBlockGrid(blocks);
                     string LSBWExtractedMessage = extractor.ExtractWatermark();
-                    MessageBox.Show(LSBWExtractedMessage);
+                    MessageBox.Show($"Extracted Message:{LSBWExtractedMessage}");
                     return;
             }
 

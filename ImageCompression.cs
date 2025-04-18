@@ -5,9 +5,10 @@ namespace Testing_WPF
 	public class ImageCompression: Attack
 	{
         private float compressionStrength; // 0 = no loss, higher = more info lost
-        private int blockSize = 8; // JPEG-style DCT blocks
+        private int blockSize = 8; // DCT blocks
 
-        public ImageCompression(float strength = 2.0f)
+        //clamps the value
+        public ImageCompression(float strength)
         {
             compressionStrength = Clamp(strength, 0.1f, 10f);
         }
@@ -70,7 +71,7 @@ namespace Testing_WPF
                     if (Math.Abs(val) < strength)
                         freq.SetElement(x, y, 0.0); // Drop low-magnitude components
                     else
-                        freq.SetElement(x, y, Math.Round(val)); // Optional rounding for realism
+                        freq.SetElement(x, y, Math.Round(val)); 
                 }
             }
         }

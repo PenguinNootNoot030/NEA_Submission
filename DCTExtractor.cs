@@ -53,7 +53,7 @@ namespace Testing_WPF
 
         public override bool SupportsColor()
         {
-            return false; // only operates on luminance
+            return false; // only operates on Y
         }
     }
 }

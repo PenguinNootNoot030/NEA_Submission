@@ -6,7 +6,7 @@ namespace Testing_WPF
     {
         protected Watermark watermark;             // Original message
         protected List<bool> bitstream;            // Message in binary
-        protected int blockSize;                   // Size of each block (e.g., 8)
+        protected int blockSize;                   // Size of each block
         protected Block[,] blocks;                 // Full image in block form
         protected ImageHandling.QuadTreeNode treeRoot;
         protected List<(int row, int col)> traversalOrder;

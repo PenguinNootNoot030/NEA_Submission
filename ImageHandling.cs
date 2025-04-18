@@ -3,48 +3,15 @@ using System.Drawing;
 
 namespace Testing_WPF
 {
-
-    //Todo: instead of returning 4 matrices 
-    //Todo: Block/ImageMatrix class
-    //added alpha back in - enable less significant changes with transparency
     public class ImageHandling
     {
         const int max_size = 1024;
         public Block[,] blocks;
-        //using filepath, load image and return as a matrix
-        /*
-        public (Matrix, Matrix, Matrix, Matrix) LoadImageToMatrix(string filePath)
-        {
-            Bitmap bmp = new Bitmap(filePath);
-            return ConvertImageToMatrix(bmp);
-        }
-        */
-
-        //convert a matrix back into an image
-        public Bitmap ConvertMatrixToImage(Matrix source_Amat, Matrix source_Rmat, Matrix source_Gmat, Matrix source_Bmat)
-        {
-            int height = source_Amat.GetRow();
-            int width = source_Amat.GetColumn();
-            Bitmap res_bmp = new Bitmap(width, height);
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < width; j++)
-                {
-                    int alpha = ClampToByte(source_Amat.GetElement(i, j) );
-                    int red = ClampToByte(source_Rmat.GetElement(i, j));
-                    int green = ClampToByte(source_Gmat.GetElement(i, j));
-                    int blue = ClampToByte(source_Bmat.GetElement(i, j));
-                    Color pixel = Color.FromArgb(alpha, red, green, blue);
-                    res_bmp.SetPixel(i, j, pixel);
-                }
-            }
-            return res_bmp;
-        }
+        
         public Block ConvertImageToMatrix(Bitmap source_bmp)
         {
             int width = source_bmp.Width;
             int height = source_bmp.Height;
-            //Matrix res_mat = new Matrix(rows,columns);
             Matrix A_scale = new Matrix(height, width);
             Matrix R_scale = new Matrix(height, width);
             Matrix G_scale = new Matrix(height, width);
@@ -70,19 +37,10 @@ namespace Testing_WPF
         }
 
 
-        //debugging
-        /*
-        public void DisplayImage(Matrix source_Amat, Matrix source_Rmat, Matrix source_Gmat, Matrix source_Bmat)
-        {
-            ConvertMatrixToImage(source_Amat, source_Rmat, source_Gmat, source_Bmat);
-        }
-        */
-
-        //save the image to a given filepath
-        public void SaveImage(string filePath, Bitmap bmp) => bmp.Save(filePath);
-
         //Check if the image is still following the origianl/ provided resolution
         private bool ValidateImage(Bitmap bmp) => bmp.Width < max_size && bmp.Height < max_size;
+
+        // Trims the image into sizes that can perfectly divides into identical blocks of the given size
         public Bitmap TrimToBlockSize(Bitmap source, int blockSize)
         {
             int newWidth = (source.Width / blockSize) * blockSize;
@@ -153,13 +111,7 @@ namespace Testing_WPF
                             int red = ClampToByte(R.GetElement(i, j));
                             int green = ClampToByte(G.GetElement(i, j));
                             int blue = ClampToByte(B.GetElement(i, j));
-                            /*
-                            int a = (int)(A.GetElement(i, j) * 255);
-                            int r = (int)(R.GetElement(i, j) * 255);
-                            int g = (int)(G.GetElement(i, j) * 255);
-                            int b = (int)(B.GetElement(i, j) * 255);
-                            */
-
+                            
                             result.SetPixel(x, y, Color.FromArgb(alpha, red, green, blue));
                         }
                     }
@@ -188,7 +140,7 @@ namespace Testing_WPF
         {
             int rows = blocks.GetLength(0);
             int cols = blocks.GetLength(1);
-            Console.WriteLine($"[QuadTree] Building tree for grid {rows}x{cols}");
+            //Console.WriteLine($"[QuadTree] Building tree for grid {rows}x{cols}");
             return BuildRecursive(blocks, 0, 0, rows, cols);
         }
 

@@ -37,7 +37,7 @@ namespace Testing_WPF
                     {
                         double val = target.GetElement(i, j);
                         int intVal = (int)(val * 255);
-                        bool bit = (intVal % 2 != 0); // LSB = 1 → true
+                        bool bit = (intVal % 2 != 0); // LSB = 1 then true
                         bitstream.Add(bit);
                     }
                 }
