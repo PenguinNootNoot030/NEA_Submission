@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows;
 namespace Testing_WPF
 {
 	public class ImageCompression: Attack
@@ -10,7 +11,10 @@ namespace Testing_WPF
         //clamps the value
         public ImageCompression(float strength)
         {
-            compressionStrength = Clamp(strength, 0.1f, 10f);
+            
+                compressionStrength = Clamp(strength, 0.1f, 10f);
+         
+            
         }
 
         public override Bitmap ApplyAttack(Bitmap image)

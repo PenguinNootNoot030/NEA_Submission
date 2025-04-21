@@ -221,65 +221,98 @@ namespace Testing_WPF
             {
                 case "DCT":
                     wm = new Watermark(paramValues[0]);
-                    Embedder DCTEmbedder = new DCTEmbedder(Convert.ToInt32(paramValues[1]), Convert.ToInt32(paramValues[2]), Convert.ToInt32(paramValues[3]));
-                    DCTEmbedder.SetBlockGrid(blocks);
-                    DCTEmbedder.EmbedWatermark(wm);
-                    Block[,] DCTmodifiedBlocks = DCTEmbedder.GetBlockGrid();
-                    bitmap = ImageHandler.MergeBlocksToImage(DCTmodifiedBlocks);
-                    DisplayImage(bitmap);
-                    MessageBox.Show($"DCT embed accomplished!");
+                    try
+                    {
+                        Embedder DCTEmbedder = new DCTEmbedder(Convert.ToInt32(paramValues[1]), Convert.ToInt32(paramValues[2]), Convert.ToInt32(paramValues[3]));
+                        DCTEmbedder.SetBlockGrid(blocks);
+                        DCTEmbedder.EmbedWatermark(wm);
+                        Block[,] DCTmodifiedBlocks = DCTEmbedder.GetBlockGrid();
+                        bitmap = ImageHandler.MergeBlocksToImage(DCTmodifiedBlocks);
+                        DisplayImage(bitmap);
+                        MessageBox.Show($"DCT embed accomplished!");
+                    }
+                    catch { MessageBox.Show("Supplied Parameters contains false datatype, please try again."); }
                     break;
                 case "LSBW":
                     wm = new Watermark(paramValues[0]);
-                    Embedder LSBWEmbedder = new LSBWEmbedder(paramValues[1]);
-                    LSBWEmbedder.SetBlockGrid(blocks);
-                    LSBWEmbedder.EmbedWatermark(wm);
-                    Block[,] LSBWmodifiedBlocks = LSBWEmbedder.GetBlockGrid();
-                    bitmap = ImageHandler.MergeBlocksToImage(LSBWmodifiedBlocks);
-                    DisplayImage(bitmap);
-                    MessageBox.Show($"LSBW embed accomplished!");
+                    try
+                    {
+                        Embedder LSBWEmbedder = new LSBWEmbedder(paramValues[1]);
+                        LSBWEmbedder.SetBlockGrid(blocks);
+                        LSBWEmbedder.EmbedWatermark(wm);
+                        Block[,] LSBWmodifiedBlocks = LSBWEmbedder.GetBlockGrid();
+                        bitmap = ImageHandler.MergeBlocksToImage(LSBWmodifiedBlocks);
+                        DisplayImage(bitmap);
+                        MessageBox.Show($"LSBW embed accomplished!");
+                    }
+                    catch { MessageBox.Show("Please ensure the channel selected is one of RGB"); }
                     break;
                 case "Rotation":
-                    Attack rot_atk = new ImageRotation(float.Parse(paramValues[0]));
-                    bitmap = rot_atk.ApplyAttack(bitmap);
-                    DisplayImage(bitmap);
-                    MessageBox.Show($"Image rotation accomplished!");
+                    try
+                    {
+                        Attack rot_atk = new ImageRotation(float.Parse(paramValues[0]));
+                        bitmap = rot_atk.ApplyAttack(bitmap);
+                        DisplayImage(bitmap);
+                        MessageBox.Show($"Image rotation accomplished!");
+                    }
+                    catch { MessageBox.Show("Supplied Parameters contains false datatype, please try again."); }
                     break;
                 case "Blurring":
-                    Attack blur_atk = new ImageBlurring(Convert.ToInt32(paramValues[0]), Convert.ToDouble(paramValues[1]));
-                    bitmap = blur_atk.ApplyAttack(bitmap);
-                    DisplayImage(bitmap);
-                    MessageBox.Show($"Image blurring accomplished");
+                    try
+                    {
+                        Attack blur_atk = new ImageBlurring(Convert.ToInt32(paramValues[0]), Convert.ToDouble(paramValues[1]));
+                        bitmap = blur_atk.ApplyAttack(bitmap);
+                        DisplayImage(bitmap);
+                        MessageBox.Show($"Image blurring accomplished");
+                    }
+                    catch { MessageBox.Show("Supplied Parameters contains false datatype, please try again."); }
                     return;
                 case "Cropping":
-                    Attack crop_atk = new ImageCropping(float.Parse(paramValues[0]));
-                    bitmap = crop_atk.ApplyAttack(bitmap);
-                    DisplayImage(bitmap);
-                    MessageBox.Show($"Image Cropping accomplished");
+                    try
+                    {
+                        Attack crop_atk = new ImageCropping(float.Parse(paramValues[0]));
+                        bitmap = crop_atk.ApplyAttack(bitmap);
+                        DisplayImage(bitmap);
+                        MessageBox.Show($"Image Cropping accomplished");
+                    }
+                    catch { MessageBox.Show("Supplied Parameters contains false datatype, please try again."); }
                     return;
                 case "Compression":
-                    Attack comp_atk = new ImageCompression(float.Parse(paramValues[0]));
-                    bitmap = comp_atk.ApplyAttack(bitmap);
-                    DisplayImage(bitmap);
-                    MessageBox.Show($"Image compression accomplished");
+                    try
+                    {
+                        Attack comp_atk = new ImageCompression(float.Parse(paramValues[0]));
+                        bitmap = comp_atk.ApplyAttack(bitmap);
+                        DisplayImage(bitmap);
+                        MessageBox.Show($"Image compression accomplished");
+                    }
+                    catch { MessageBox.Show("Supplied Parameters contains false datatype, please try again."); }
                     return;
                 case "DCT Embed Check":
-                    bitmap = ImageHandler.TrimToBlockSize(bitmap, blocksize);
-                    ARGB = ImageHandler.ConvertImageToMatrix(bitmap);
-                    blocks = ImageHandler.SplitToBlocks(ARGB.GetChannel("A"), ARGB.GetChannel("R"), ARGB.GetChannel("G"), ARGB.GetChannel("B"), blocksize);
-                    Extractor DCTExtractor = new DCTExtractor(Convert.ToInt32(paramValues[0]), Convert.ToInt32(paramValues[1]), Convert.ToInt32(paramValues[2]));
-                    DCTExtractor.SetBlockGrid(blocks);
-                    string DCTExtractedMessage = DCTExtractor.ExtractWatermark();
-                    MessageBox.Show($"Extracted Message:{DCTExtractedMessage}");
+                    try
+                    {
+                        bitmap = ImageHandler.TrimToBlockSize(bitmap, blocksize);
+                        ARGB = ImageHandler.ConvertImageToMatrix(bitmap);
+                        blocks = ImageHandler.SplitToBlocks(ARGB.GetChannel("A"), ARGB.GetChannel("R"), ARGB.GetChannel("G"), ARGB.GetChannel("B"), blocksize);
+                        Extractor DCTExtractor = new DCTExtractor(Convert.ToInt32(paramValues[0]), Convert.ToInt32(paramValues[1]), Convert.ToInt32(paramValues[2]));
+                        DCTExtractor.SetBlockGrid(blocks);
+                        string DCTExtractedMessage = DCTExtractor.ExtractWatermark();
+                        MessageBox.Show($"Extracted Message:{DCTExtractedMessage}");
+                    }
+                    catch { MessageBox.Show("Supplied Parameters contains false datatype, please try again."); }
+
                     return;
                 case "LSBW Embed Check":
-                    bitmap = ImageHandler.TrimToBlockSize(bitmap, blocksize);
-                    ARGB = ImageHandler.ConvertImageToMatrix(bitmap);
-                    blocks = ImageHandler.SplitToBlocks(ARGB.GetChannel("A"), ARGB.GetChannel("R"), ARGB.GetChannel("G"), ARGB.GetChannel("B"), blocksize);
-                    Extractor extractor = new LSBWExtractor(paramValues[0]);
-                    extractor.SetBlockGrid(blocks);
-                    string LSBWExtractedMessage = extractor.ExtractWatermark();
-                    MessageBox.Show($"Extracted Message:{LSBWExtractedMessage}");
+                    try
+                    {
+                        bitmap = ImageHandler.TrimToBlockSize(bitmap, blocksize);
+                        ARGB = ImageHandler.ConvertImageToMatrix(bitmap);
+                        blocks = ImageHandler.SplitToBlocks(ARGB.GetChannel("A"), ARGB.GetChannel("R"), ARGB.GetChannel("G"), ARGB.GetChannel("B"), blocksize);
+                        Extractor extractor = new LSBWExtractor(paramValues[0]);
+                        extractor.SetBlockGrid(blocks);
+                        string LSBWExtractedMessage = extractor.ExtractWatermark();
+                        MessageBox.Show($"Extracted Message:{LSBWExtractedMessage}");
+                    }
+                    catch { MessageBox.Show("Please ensure the channel selected is one of RGB"); }
                     return;
             }
 

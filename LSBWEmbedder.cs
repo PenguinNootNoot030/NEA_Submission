@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 namespace Testing_WPF
 {
 	public class LSBWEmbedder: Embedder
@@ -58,7 +59,7 @@ namespace Testing_WPF
 
         public override string GetEmbedderName() => $"LSBW Embedder [{embedChannel}]";
 
-        public override bool SupportsColor()
+        public override bool SupportsColour()
         {
             return embedChannel != "Y";
         }

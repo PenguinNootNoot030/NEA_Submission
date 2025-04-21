@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Reflection.Metadata;
+using System.Windows;
 namespace Testing_WPF
 {
     public class ImageRotation : Attack 
@@ -128,7 +129,7 @@ namespace Testing_WPF
                 g.TranslateTransform(newWidth / 2f, newHeight / 2f);
                 g.RotateTransform(angle);
                 g.TranslateTransform(-image.Width / 2f, -image.Height / 2f);
-                g.DrawImage(image, new Point(0, 0));
+                g.DrawImage(image, new System.Drawing.Point(0, 0));
             }
 
             attackedImage = rotated;

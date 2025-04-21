@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 namespace Testing_WPF
 {
     public class DCTEmbedder : Embedder
@@ -12,6 +13,7 @@ namespace Testing_WPF
             this.coefRow = coefRow;
             this.coefCol = coefCol;
             this.strength = strength;
+
         }
 
         public override void EmbedWatermark(Watermark wm)
@@ -77,7 +79,7 @@ namespace Testing_WPF
 
         public override string GetEmbedderName() => "DCT Embedder";
 
-        public override bool SupportsColor() => false; // works on Y channel
+        public override bool SupportsColour() => false; // works on Y channel
     }
 }
 

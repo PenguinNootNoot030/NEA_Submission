@@ -7,9 +7,7 @@ namespace Testing_WPF
         private float cropRatio; // Between 0.0 and 0.5
 
         public ImageCropping(float ratio = 0.1f)
-        {
-            cropRatio = ClampRatio(ratio);
-        }
+        { cropRatio = ClampRatio(ratio); }
 
         public override Bitmap ApplyAttack(Bitmap image)
         {

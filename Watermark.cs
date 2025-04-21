@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Windows;
 namespace Testing_WPF
 {
     //boxed off
@@ -14,10 +15,10 @@ namespace Testing_WPF
         public Watermark(string message)
         {
             Message = message;
-            if (!IsValid())
-                         throw new ArgumentException("Invalid watermark message");
-
-            GenerateBitStream();
+            if (IsValid())
+            { GenerateBitStream(); }
+            else 
+            { MessageBox.Show("Invalid Message : length is either null or beyond the maximum allowance of 50 charcters."); }
         }
 
         private bool IsValid()
@@ -29,12 +30,12 @@ namespace Testing_WPF
         {
             BitStream = new List<bool>();
 
-            // Optionally prefix length (e.g. 8 bits)
+            // Prefix length of 8bits
             byte lengthByte = (byte)Message.Length;
             for (int i = 7; i >= 0; i--)
                 BitStream.Add((lengthByte & (1 << i)) != 0);
 
-            // Message → bits (ASCII encoding)
+            // Message to bits (ASCII encoding)
             foreach (char c in Message)
             {
                 byte chByte = (byte)c;

@@ -35,7 +35,7 @@ namespace Testing_WPF
         /// <summary>
         /// True if this embedder touches RGB channels, false if luminance-only
         /// </summary>
-        public virtual bool SupportsColor() => false;
+        public virtual bool SupportsColour() => false;
 
         /// <summary>
         /// Replaces a modified block back into the image grid

@@ -194,7 +194,7 @@ namespace Testing_WPF
             return sb.ToString();
         }
 
-        //validate whether if the matrix mu;tiplication could take place.
+        //validate whether if the matrix multiplication could take place.
         private bool RowColumnValidatation(Matrix suppliedMatrix, string action)
 		{
 			switch (action)

@@ -39,6 +39,6 @@ namespace Testing_WPF
         /// <summary>
         /// Indicates whether this method works with full-color images
         /// </summary>
-        public abstract bool SupportsColor();
+        public abstract bool SupportsColour();
     }
 }

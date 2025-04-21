@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows;
 namespace Testing_WPF
 {
     public class ImageBlurring : Attack
@@ -11,6 +12,7 @@ namespace Testing_WPF
         {
             kernelSize = ClampToOdd(size);
             this.blurSigma = ClmapSigma(blurSigma);
+           
         }
 
         public override Bitmap ApplyAttack(Bitmap image)
